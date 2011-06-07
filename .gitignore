@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings/
+target/
+web-app/WEB-INF/classes/
+grails-seo-*.zip
+stacktrace.log
+*.swp

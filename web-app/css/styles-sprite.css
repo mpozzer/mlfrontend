@@ -1,0 +1,11 @@
+.contentBox .header .wrapLogo, .truste1, .truste2, .verisign{background:#FFF url('/jms/mlc/regfe/img/spriteReg.png') 0px 0px no-repeat;}
+.contentBox .header .wrapLogo{height:45px;overflow:hidden;width:200px; margin:10px 0;float:left;}
+.contentBox .header .wrapLogo a{display: block; width: 200px; height: 50px;}
+.truste1, .truste2, .verisign {display: block;float: left;height: 40px;width: 120px;}
+.truste1 {background-position: 0 -61px;}
+.truste2 {background-position: 0 -98px;}
+.verisign {background-position: 0 -141px;height: 60px;margin-top:-5px;}
+
+.contentBox .header .wrapLogoPt{background:#FFF url('/jms/mlc/regfe/img/spriteRegPt.png') 0px 0px no-repeat;}
+.contentBox .header .wrapLogoPt{height:45px;overflow:hidden;width:200px; margin:10px 0;float:left;}
+.contentBox .header .wrapLogoPt a{display: block; width: 200px; height: 50px;}
