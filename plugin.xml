@@ -6,9 +6,10 @@
   <resources>
     <resource>BuildConfig</resource>
     <resource>Config</resource>
-    <resource>DataSource</resource>
     <resource>MLFeUrlMappings</resource>
     <resource>com.mercadolibre.frontend.StatsFilters</resource>
+    <resource>com.mercadolibre.frontend.commons.ParametersWrappedRequest</resource>
+    <resource>com.mercadolibre.frontend.commons.SiteBasedConfiguration</resource>
     <resource>spring.resources</resource>
     <resource>com.mercadolibre.frontend.CaptchaImageController</resource>
     <resource>com.mercadolibre.frontend.CascadingStyleSheetController</resource>
@@ -16,6 +17,8 @@
     <resource>com.mercadolibre.frontend.ResourceController</resource>
     <resource>com.mercadolibre.frontend.SampleController</resource>
     <resource>mlfrontend.HtmlController</resource>
+    <resource>com.mercadolibre.frontend.services.HtmlCompressionService</resource>
+    <resource>com.mercadolibre.frontend.services.MLDomainsResolver</resource>
     <resource>com.mercadolibre.HTMLTagLib</resource>
     <resource>com.mercadolibre.TestTagLib</resource>
   </resources>

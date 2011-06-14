@@ -1,1 +1,1 @@
-alert('HOLA');
+alert('cargo test-js');

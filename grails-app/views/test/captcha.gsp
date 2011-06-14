@@ -1,7 +1,7 @@
 <ml:html>
   <ml:head>
 	  <title>MercadoLibre Captcha words</title>
-	  
+	  <ml:link resources="${['look']}" /> 
   </ml:head>
   <ml:body>
 		<h1>MercadoLibre Captcha words</h1>
