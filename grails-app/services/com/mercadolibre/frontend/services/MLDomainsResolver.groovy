@@ -20,6 +20,7 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 	SimpleRestClient simpleRestClient
 	def connectionRetries = 3
 	
+
 	private static def SITES_DOMAINS = []
 
 	public void afterPropertiesSet() {
@@ -31,6 +32,7 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 			try {
 			  simpleRestClient.get(uri:"/site_domains".toString(),
 				success: {
+					//preprocesar y objetos no json
 				  SITES_DOMAINS = it.data
 				}, failure:{
 				  throw new RuntimeException("Failed to obtain ML domain from /site_domains ${it?.data}")
@@ -53,13 +55,10 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 	
 	public String getRequestSite(request) {
 		String serverName = request.serverName;
-		def matchingDomain = SITES_DOMAINS.findAll({ d ->
+		def matchingDomain = SITES_DOMAINS.find({ d ->
 			serverName.endsWith(d.id)
 			})
-		if (matchingDomain?.isEmpty()) {
-			// throw
-		}
-		return matchingDomain.getAt(0).site_id.toString()
+		return matchingDomain?.site_id?.toString()
 	}
 	
 }

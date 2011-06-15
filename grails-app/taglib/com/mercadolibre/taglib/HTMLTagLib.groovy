@@ -38,15 +38,8 @@ class HTMLTagLib {
 		
 		String compressStats = ''
 		if (compress) {
-			def startCompression = System.currentTimeMillis()
-			
 			out << htmlCompressionService.compress(body())
-			
-			def endCompression = System.currentTimeMillis()
-			
-			compressStats = 
-			"""    Compression Time (outside invocation): ${endCompression - startCompression} ms\n"
-			       Compression : ${htmlCompressionService.getStatistics()}\n"""
+			compressStats = "Compression : ${htmlCompressionService.getStatistics()}\n"
 		} else {
 		  out << body()
 		}
@@ -68,8 +61,8 @@ class HTMLTagLib {
 		out << compressStats
 		out << "-->"
 	}
-
-
+	
+	
 	def body = { attrs, body ->
 		def bodyAttrs = HTMLUtil.serializeAttributes(attrs)
 
@@ -89,7 +82,7 @@ class HTMLTagLib {
         out << "}\n"
 		
 		// async js files loading starts now
-		out << " scr.js(${pageScope.scripts['async']}, function() {${pageScope.callback}})\n"
+		//out << " scr.js(${pageScope.scripts['async']}, function() {${pageScope.callback}})\n"
 		out << "</script>\n"
 		out << "</body>"
 	}
@@ -111,8 +104,8 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
-		def noCompress = Boolean.valueOf(params.noCompress)
-	    String scriptSrc = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js?noCompress=${noCompress}"		
+		
+	    String scriptSrc = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"		
 		
 		pageScope.scripts = ['onload':[], 'async':[]]
 		
@@ -120,8 +113,8 @@ class HTMLTagLib {
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
           pageScope.scripts['onload'] << "\"${scriptSrc}\""
-		} else if (async) {
-		  pageScope.scripts['async'] << "\"${scriptSrc}\""
+//		} else if (async) {
+//		  pageScope.scripts['async'] << "\"${scriptSrc}\""
 		} else {
 		  // append into html
 		  out << "<script type=\"text/javascript\" src=\"${scriptSrc}\"/>"
@@ -133,19 +126,20 @@ class HTMLTagLib {
 	def link = { attrs ->
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-		out << "${SBC.getConfig(params.siteId).url['baseStatic']}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css?noCompress=${noCompress}"
+		out << "${SBC.getConfig(params.siteId).url['baseStatic']}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
 		out << "\""
 		out << "/>"
 	}
 	
 
+	//TODO cambiar url dependiendo si es http o https ( evaluar que las url favicon y .js esten en el plugin )
 	def head = { attrs, body ->
 		out << '<head>\n'
 		out << '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>'
 		out << '\n'
 		out << body()
 		out << '<!--[if lt IE 7 ]>'
-		out << '<script src="js/dd_belatedpng.js"></script>'
+		out << '<script src="http://www.mercadolibre.com/org-img/pcorner/js/dd_belatedPNG.min.js"></script>'
 		out << '<script> DD_belatedPNG.fix(\'img, .ico, .png24fix, .ch-expando-trigger\'); //fix any <img> or .ico background-images </script>'
 		out << '<![endif]-->'
 		out << '<link rel="shortcut icon" href="https://www.mercadolibre.com/favicon.ico" />\n'

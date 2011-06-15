@@ -44,6 +44,8 @@ class HtmlCompressionService {
 //		compressor.setJavaScriptCompressor(new ClosureJavaScriptCompressor(ClosureJavaScriptCompressor.COMPILATION_LEVEL_SIMPLE));
 		
 		compressor.setGenerateStatistics(true)           // generate statistics
+		
+		
 	}
 	
 	String compress(def html) {
