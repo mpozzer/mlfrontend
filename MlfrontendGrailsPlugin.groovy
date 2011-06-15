@@ -1,3 +1,7 @@
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+
+import com.mercadolibre.frontend.ResourceController
+
 class MlfrontendGrailsPlugin {
     // the plugin version
     def version = "0.7.1"
@@ -28,7 +32,7 @@ class MlfrontendGrailsPlugin {
 			   'filter-class'('org.springframework.web.filter.DelegatingFilterProxy')
 			   'init-param' {
 				   'param-name'('targetBeanName')
-				   'param-value'('mlRequestParamsFilter')
+				   'param-value'('mlParamsAwareFilter')
 			   }	   
 			   'init-param' {
                    'param-name'('targetFilterLifecycle')
@@ -49,10 +53,33 @@ class MlfrontendGrailsPlugin {
     }
 
     def doWithSpring = {
-        // TODO Implement runtime spring config (optional)
+        simpleRestClient(com.mercadolibre.opensource.frameworks.restclient.SimpleRestClient) { bean ->
+	        baseUrl = "https://api.mercadolibre.com"
+	        soTimeout = 500
+	    }
+
+	    mlCaptchaService(com.mercadolibre.captcha.MLCaptchaService)
+	    mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)
+	    mlDomainsResolver(com.mercadolibre.frontend.services.MLDomainsResolver) { bean ->
+            bean.dependsOn = ["simpleRestClient"]
+        }
+	
+	    htmlCompressionService(com.mercadolibre.frontend.services.HtmlCompressionService)
+		
+		groovyTemplateEngine(org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine)
+		
     }
 
     def doWithDynamicMethods = { ctx ->
+		/**
+		* Encodes a URI using UTF-8 if no other encoding is provided
+		*/
+	   String.metaClass.encodeURIComponent = { anEncode ->
+		   return URLEncoder.encode(delegate,(anEncode?:CH.config.grails.views.gsp.encoding).toString())
+	   }
+	   ResourceController.metaClass.noCompress = { ->
+		   return Boolean.valueOf(params.noCompress)
+	   }
         // TODO Implement registering dynamic methods to classes (optional)
     }
 

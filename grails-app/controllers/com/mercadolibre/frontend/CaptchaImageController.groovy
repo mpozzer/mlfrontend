@@ -3,6 +3,7 @@ package com.mercadolibre.frontend
 
 import com.mercadolibre.captcha.ImgWordModel
 
+
 /**
  * Controller to create and render a captcha image
  * @author pablo.duranti@mercadolibre.com

@@ -28,6 +28,23 @@ log4j = {
 
 ROOT {
 	url {
-		baseStatic = 'http://localhost:8080/'
+		baseStatic = 'http://localhost:8080'
 	}
+}
+MLA {
+	url {
+		baseStatic = 'http://registration.dev.mercadolibre.com.ar:8080'
+	}
+}
+
+environments {
+	production {
+		api.resource = "https://api.mercadolibre.com"
+	}
+	development {
+		api.resource = "https://api.mercadolibre.com"
+	}
+	test {
+		api.resource = "https://api.mercadolibre.com"
+	}	
 }

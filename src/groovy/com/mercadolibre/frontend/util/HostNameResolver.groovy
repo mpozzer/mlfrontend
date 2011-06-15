@@ -1,4 +1,4 @@
-package com.registration.frontend.util
+package com.mercadolibre.frontend.util
 
 class HostNameResolver {
 

@@ -12,7 +12,7 @@ class JavaScriptController extends ResourceController {
 
 	@Override
 	def getResourceSplit() {
-		';'
+		'\n'
 	}
 
 	@Override
@@ -22,10 +22,14 @@ class JavaScriptController extends ResourceController {
 
 	@Override
 	def minimize(script) {
-		JavaScriptCompressor compressor = new JavaScriptCompressor(new StringReader(script), null)
-		StringWriter write = new StringWriter()
-		compressor.compress(write, 8000, false, false, true, false)
-		write.flush()
-		return write.getBuffer().toString()
+		if (noCompress()) {
+			return script
+		} else {
+			JavaScriptCompressor compressor = new JavaScriptCompressor(new StringReader(script), null)
+			StringWriter write = new StringWriter()
+			compressor.compress(write, 8000, false, false, true, false)
+			write.flush()
+			return write.getBuffer().toString()
+		}
 	}
 }
