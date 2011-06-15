@@ -11,8 +11,9 @@ class HTMLTagLib {
 	static namespace = 'ml'
 
 	def mlCaptchaService
-    def htmlCompressionService
-	
+	def htmlCompressionService
+	def javasScriptCompressionService
+
 	/**
 	 * Takes the following attributes:
 	 * -compress: if true, HTML is minified using {@Code HtmlCompressionService}
@@ -22,8 +23,9 @@ class HTMLTagLib {
 		request.setAttribute('com.mercadolibre.frontend.StartRender', System.currentTimeMillis())
 
 		def attrClass = attrs.remove('class')
-		def noCompress = Boolean.valueOf(params.noCompress)
-		def compress  = Boolean.valueOf(attrs.remove('compress')) && !noCompress
+		
+		pageScope.compress = Boolean.valueOf(attrs.remove('compress')) && !Boolean.valueOf(params.noCompress) 
+		
 		def htmlAttrs = HTMLUtil.serializeAttributes(attrs)
 
 		attrClass = (attrClass)?' ' + attrClass:''
@@ -35,15 +37,15 @@ class HTMLTagLib {
 		out << "<!--[if IE 9 ]> <html lang=\"en\" class=\"no-js ie9${attrClass}\"${htmlAttrs}> <![endif]-->"
 		out << "<!--[if (gt IE 9)|!(IE)]> <!--> <html lang=\"en\" class=\"no-js${attrClass}\"${htmlAttrs}> <!--<![endif]-->"
 		out << '\n'
-		
+
 		String compressStats = ''
-		if (compress) {
+		if (pageScope.compress) {
 			out << htmlCompressionService.compress(body())
-			compressStats = "Compression : ${htmlCompressionService.getStatistics()}\n"
+			compressStats = htmlCompressionService.getStatistics()
 		} else {
-		  out << body()
+			out << body()
 		}
-		
+
 		out << '</html>'
 
 		def startRequest = request.getAttribute('com.mercadolibre.frontend.StartRequest')
@@ -54,44 +56,58 @@ class HTMLTagLib {
 		out << '\n'
 		out << "<!--\n"
 		out << "    Stats\n"
-		out << "    Generate Time	: ${(endRequest - startRequest) - (endRequest - startRender)} ms\n"
-		out << "    Render Time	: ${endRequest - startRender} ms\n"
-		out << "    Total Time	: ${endRequest - startRequest} ms\n"
-		out << "    HostName	: ${HostNameResolver.getHostName()}\n"
-		out << compressStats
+		out << "    Generate time	: ${(endRequest - startRequest) - (endRequest - startRender)} ms\n"
+		out << "    Render time		: ${endRequest - startRender} ms\n"
+		out << "    ${compressStats}\n"
+		out << "    Total time		: ${endRequest - startRequest} ms\n"
+		out << "    HostName		: ${HostNameResolver.getHostName()}\n"
 		out << "-->"
 	}
-	
-	
+
+
 	def body = { attrs, body ->
 		def bodyAttrs = HTMLUtil.serializeAttributes(attrs)
 
-		pageScope.onLoadScripts = []
-		
 		out << "<body${bodyAttrs}>"
 		out << '\n'
 		out << body()
-		
-		// write javascript elements
-		out << "<script>"
-		out << jsLoader
-		
-		// onload js files
-        out << "window.onload = function() {"
-		out << "  scr.js(${pageScope.scripts['onload']}, function() {${pageScope.callback}})"
-        out << "}\n"
-		
-		// async js files loading starts now
-		//out << " scr.js(${pageScope.scripts['async']}, function() {${pageScope.callback}})\n"
-		out << "</script>\n"
+
+
+		if(pageScope.scripts){
+			// write javascript elements
+			out << "<script type=\"text/javascript\" >"
+	
+			if (pageScope.scripts?.onload){
+				out << jsLoader
+			}
+				
+			
+
+			// onload js files
+			out << "window.onload = function() {"
+				pageScope.scripts['onload'].each{
+					out << "  scr.js('${it.resource}', function() {${compressJavascript(it.body)}})"
+				}
+			out << "}\n"
+			out << "</script>\n"
+
+		}
 		out << "</body>"
 	}
 
+	def private compressJavascript(script){
+		if(pageScope.compress){
+			return javasScriptCompressionService.compress(script)
+		}
+		return script
+	}
+	
+	
+	
 	/**
 	 * Javascript loader function that writes a js source file asynchronously
 	 */
 	def static jsLoader = """
-	/* scr.js 0B 0.1.2 - March 17 2011 - Little tiny loader for javascript sources. */
 	(function(d){window.scr={js:function(s,c){if(typeof s==="string") {s=[s];}var script=d.getElementsByTagName("script")[0];var b={t:s.length,i:0};b.r=function() {return b.t===b.i;};var callback=function(){b.i++;if(c&&b.r()){c();}};var ready=(function(){if(script.readyState) {return function(n){n.onreadystatechange=function(){if(n.readyState==='loaded'||n.readyState==='complete'){n.onreadystatechange=null;callback();}};};}else{return function(n){n.onload=function(){callback();};};}}());var i=0;var e=d.createElement("script");d.type="text/javascript";for(i;i<b.t;i++){var n=e.cloneNode(true);ready(n);n.src=s[i];n.async="true";script.parentNode.insertBefore(n,script);}}};}(document));
 	"""
 
@@ -104,25 +120,21 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
-		
-	    String scriptSrc = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"		
-		
+
+		String scriptResource = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
+
 		pageScope.scripts = ['onload':[], 'async':[]]
-		
-		def async = Boolean.valueOf(attrs.async)
+
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
-          pageScope.scripts['onload'] << "\"${scriptSrc}\""
-//		} else if (async) {
-//		  pageScope.scripts['async'] << "\"${scriptSrc}\""
+			pageScope.scripts['onload']  <<  ['resource':scriptResource,'body':body()]
 		} else {
-		  // append into html
-		  out << "<script type=\"text/javascript\" src=\"${scriptSrc}\"/>"
+			out << "<script type=\"text/javascript\" src=\"${scriptResource}\"></script>"
 		}
-		pageScope.callback = body
+
 	}
 
-	
+
 	def link = { attrs ->
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
@@ -130,7 +142,7 @@ class HTMLTagLib {
 		out << "\""
 		out << "/>"
 	}
-	
+
 
 	//TODO cambiar url dependiendo si es http o https ( evaluar que las url favicon y .js esten en el plugin )
 	def head = { attrs, body ->
@@ -147,21 +159,21 @@ class HTMLTagLib {
 	}
 
 
-    def captcha = { attrs ->
-        def height = attrs.height
-        def width = attrs.width
-		
-        def challengePhrase = mlCaptchaService.getNewChallenge()
-		
-        out << "<span id=\"captcha_challenge_phrase_holder\" style=\"display: none;\">"
-        out << "  <input type=\"hidden\" name=\"captcha_challenge_phrase\" id=\"captcha_challenge_phrase\" value=\"${challengePhrase}\">"
-        out << "</span>"
-		
-		  
-        out << "<div id=\"captcha_image\">"
-        out << "  <img height=\"${height}\" width=\"${width}\" src=\"/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
-        out << "</div>"
-		
-    }
-	
+	def captcha = { attrs ->
+		def height = attrs.height
+		def width = attrs.width
+
+		def challengePhrase = mlCaptchaService.getNewChallenge()
+
+		out << "<span id=\"captcha_challenge_phrase_holder\" style=\"display: none;\">"
+		out << "  <input type=\"hidden\" name=\"captcha_challenge_phrase\" id=\"captcha_challenge_phrase\" value=\"${challengePhrase}\">"
+		out << "</span>"
+
+
+		out << "<div id=\"captcha_image\">"
+		out << "  <img height=\"${height}\" width=\"${width}\" src=\"/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
+		out << "</div>"
+
+	}
+
 }

@@ -1,6 +1,6 @@
-package com.mercadolibre.frontend
 
-class StatsFilters {
+
+class MLFeStatsFilters {
 
     def filters = {
         all(uri:'/**') {

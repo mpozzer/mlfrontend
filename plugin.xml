@@ -1,4 +1,4 @@
-<plugin name='mlfrontend' version='0.7.1' grailsVersion='1.3.7 &gt; *'>
+<plugin name='mlfrontend' version='0.7.3' grailsVersion='1.3.7 &gt; *'>
   <author>Pablo Moretti / Pablo Duranti</author>
   <authorEmail>pablo.moretti@mercadolibre.com / pablo.duranti@mercadolibre.com </authorEmail>
   <title>MercadoLibre Frontend</title>
@@ -16,11 +16,10 @@
     <resource>com.mercadolibre.frontend.JavaScriptController</resource>
     <resource>com.mercadolibre.frontend.ResourceController</resource>
     <resource>com.mercadolibre.frontend.SampleController</resource>
-    <resource>mlfrontend.HtmlController</resource>
     <resource>com.mercadolibre.frontend.services.HtmlCompressionService</resource>
     <resource>com.mercadolibre.frontend.services.MLDomainsResolver</resource>
-    <resource>com.mercadolibre.HTMLTagLib</resource>
-    <resource>com.mercadolibre.TestTagLib</resource>
+    <resource>com.mercadolibre.frontend.services.MLDomainsResolverStub</resource>
+    <resource>com.mercadolibre.taglib.HTMLTagLib</resource>
   </resources>
   <dependencies />
   <behavior />

@@ -4,5 +4,6 @@
 target/
 web-app/WEB-INF/classes/
 grails-seo-*.zip
+mlfrontend-*
 stacktrace.log
 *.swp

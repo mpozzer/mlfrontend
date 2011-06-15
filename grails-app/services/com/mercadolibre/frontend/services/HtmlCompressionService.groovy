@@ -54,7 +54,7 @@ class HtmlCompressionService {
 	
 	String getStatistics() {
 		return String.format(
-			"Compression time: %,d ms, Original size: %,d bytes, Compressed size: %,d bytes",
+			"Compression time	: %,d ms (Original size: %,d bytes, Compressed size: %,d bytes)",
 			compressor.getStatistics().getTime(),
 			compressor.getStatistics().getOriginalMetrics().getFilesize(),
 			compressor.getStatistics().getCompressedMetrics().getFilesize()

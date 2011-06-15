@@ -24,6 +24,7 @@ grails.project.dependency.resolution = {
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "https://oss.sonatype.org/content/groups/public"
         mavenRepo "http://repository.jboss.com/maven2/"
+		mavenRepo "http://maven.glassfish.org/content/groups/glassfish/"
 		mavenRepo "http://10.10.42.47:8180/nexus/content/groups/public"
 		mavenRepo "http://git.ml.com:8081/nexus/content/groups/Arquitectura"
 		mavenRepo "http://git.ml.com:8081/nexus/content/groups/public"
