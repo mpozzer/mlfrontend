@@ -67,17 +67,19 @@ class HTMLTagLib {
 
 	def body = { attrs, body ->
 		def bodyAttrs = HTMLUtil.serializeAttributes(attrs)
+		
+		pageScope.scripts = ['onload':[], 'async':[]]
 
 		out << "<body${bodyAttrs}>"
 		out << '\n'
 		out << body()
 
 		
-		if(pageScope.properties.scripts){
+		if(pageScope.scripts){
 			// write javascript elements
 			out << "<script type=\"text/javascript\" >"
 	
-			if (pageScope.scripts?.onload){
+			if (pageScope.scripts.onload){
 				out << jsLoader
 				
 				// onload js files
@@ -120,8 +122,6 @@ class HTMLTagLib {
 	def script = { attrs, body ->
 
 		String scriptResource = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
-
-		pageScope.scripts = ['onload':[], 'async':[]]
 
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
