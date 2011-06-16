@@ -130,6 +130,7 @@ class HTMLTagLib {
 			pageScope.scripts['onload']  <<  ['resource':scriptResource,'body':body()]
 		} else {
 			out << "<script type=\"text/javascript\" src=\"${scriptResource}\"></script>"
+			out << "<script type=\"text/javascript\">${body()}</script>"
 		}
 
 	}
@@ -151,7 +152,7 @@ class HTMLTagLib {
 		out << '\n'
 		out << body()
 		out << '<!--[if lt IE 7 ]>'
-		out << '<script src="http://www.mercadolibre.com/org-img/pcorner/js/dd_belatedPNG.min.js"></script>'
+		out << '<script src="https://www.mercadolibre.com/org-img/pcorner/js/dd_belatedPNG.min.js"></script>'
 		out << '<script> DD_belatedPNG.fix(\'img, .ico, .png24fix, .ch-expando-trigger\'); //fix any <img> or .ico background-images </script>'
 		out << '<![endif]-->'
 		out << '<link rel="shortcut icon" href="https://www.mercadolibre.com/favicon.ico" />\n'
