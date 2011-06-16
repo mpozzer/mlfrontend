@@ -79,17 +79,15 @@ class HTMLTagLib {
 	
 			if (pageScope.scripts?.onload){
 				out << jsLoader
-			}
 				
-			
-
-			// onload js files
-			out << "window.onload = function() {"
-				pageScope.scripts['onload'].each{
-					out << "  scr.js('${it.resource}', function() {${compressJavascript(it.body)}})"
-				}
-			out << "}\n"
-			out << "</script>\n"
+				// onload js files
+				out << "window.onload = function() {"
+					pageScope.scripts['onload'].each{
+						out << "  scr.js('${it.resource}', function() {${compressJavascript(it.body)}})"
+					}
+				out << "}\n"
+				out << "</script>\n"
+			}
 
 		}
 		out << "</body>"
