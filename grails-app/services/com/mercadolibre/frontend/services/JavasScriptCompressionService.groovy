@@ -9,7 +9,7 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor
 class JavasScriptCompressionService {
 	
 	String compress(script) {
-		JavaScriptCompressor compressor = new JavaScriptCompressor(new StringReader(script), null)
+		JavaScriptCompressor compressor = new JavaScriptCompressor(new StringReader(script.toString()), null)
 		StringWriter write = new StringWriter()
 		compressor.compress(write, 8000, false, false, true, false)
 		write.flush()
