@@ -73,7 +73,7 @@ class HTMLTagLib {
 		out << body()
 
 		
-		if(pageScope.getProperty('scripts')){
+		if(pageScope.properties.scripts){
 			// write javascript elements
 			out << "<script type=\"text/javascript\" >"
 	
