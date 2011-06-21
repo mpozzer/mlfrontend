@@ -29,6 +29,5 @@ class MLFeUrlMappings {
 				site(matches: /[A-Z]{3}/)
 			}
 		}
-		
 	}
 }
