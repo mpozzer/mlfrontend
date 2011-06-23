@@ -43,7 +43,7 @@ class MlfrontendGrailsPlugin {
 			}
 		}
 
-		def mappings = xml.'filter'
+		def mappings = xml.'filter-mapping'
 		mappings[mappings.size() - 1] + {
 			'filter-mapping'{
 				'filter-name'('MlFilter')
