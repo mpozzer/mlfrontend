@@ -29,7 +29,7 @@ abstract class ResourceController {
 	def index = {
 
 		response.setHeader("Content-type", contentType)
-		response.setHeader("Cache-Control","public, max-age=2592000")
+		response.setHeader("Cache-Control","max-age=2592000,public")
 
 		StringBuilder sb = new StringBuilder()
 

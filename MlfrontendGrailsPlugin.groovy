@@ -27,8 +27,8 @@ class MlfrontendGrailsPlugin {
 	def documentation = "http://grails.org/plugin/mlfrontend"
 
 	def doWithWebDescriptor = { xml ->
-		def contextParam = xml.'context-param'
-		contextParam[contextParam.size() - 1] + {
+		def filters = xml.'filter'
+		filters[filters.size() - 1] + {
 			'filter'{
 				'filter-name'('MlFilter')
 				'filter-class'('org.springframework.web.filter.DelegatingFilterProxy')
@@ -43,8 +43,8 @@ class MlfrontendGrailsPlugin {
 			}
 		}
 
-		def filters = xml.'filter'
-		filters[filters.size() - 1] + {
+		def mappings = xml.'filter'
+		mappings[mappings.size() - 1] + {
 			'filter-mapping'{
 				'filter-name'('MlFilter')
 				'url-pattern'('/*')
