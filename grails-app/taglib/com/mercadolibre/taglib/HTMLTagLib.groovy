@@ -88,8 +88,8 @@ class HTMLTagLib {
 						out << "  scr.js('${it.resource}', function() {${compressJavascript(it.body)}})"
 					}
 				out << "}\n"
-				out << "</script>\n"
 			}
+			out << "</script>\n"
 
 		}
 		out << "</body>"
