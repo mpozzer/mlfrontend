@@ -120,8 +120,10 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
+		
+		def urlBase = attrs.urlBase?:SBC.getConfig(params.siteId).url['baseStatic'];
 
-		String scriptResource = "${SBC.getConfig(params.siteId).url['baseStatic']}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
+		String scriptResource = "${urlBase}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
 
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
@@ -135,9 +137,12 @@ class HTMLTagLib {
 
 
 	def link = { attrs ->
+		
+		def urlBase = attrs.urlBase?:SBC.getConfig(params.siteId).url['baseStatic'];
+		
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-		out << "${SBC.getConfig(params.siteId).url['baseStatic']}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
+		out << "${urlBase}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
 		out << "\""
 		out << "/>"
 	}
@@ -161,6 +166,8 @@ class HTMLTagLib {
 	def captcha = { attrs ->
 		def height = attrs.height
 		def width = attrs.width
+		
+		def urlBase = attrs.urlBase?:''
 
 		def challengePhrase = mlCaptchaService.getNewChallenge()
 
@@ -170,7 +177,7 @@ class HTMLTagLib {
 
 
 		out << "<div id=\"captcha_image\">"
-		out << "  <img height=\"${height}\" width=\"${width}\" src=\"/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
+		out << "  <img height=\"${height}\" width=\"${width}\" src=\"${urlBase}/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
 		out << "</div>"
 
 	}
