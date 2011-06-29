@@ -10,7 +10,6 @@ class HTMLTagLib {
 
 	static namespace = 'ml'
 
-	def mlCaptchaService
 	def htmlCompressionService
 	def javasScriptCompressionService
 
@@ -155,24 +154,6 @@ class HTMLTagLib {
 		out << '<![endif]-->'
 		out << '<link rel="shortcut icon" href="https://www.mercadolibre.com/favicon.ico" />\n'
 		out << '</head>'
-	}
-
-
-	def captcha = { attrs ->
-		def height = attrs.height
-		def width = attrs.width
-
-		def challengePhrase = mlCaptchaService.getNewChallenge()
-
-		out << "<span id=\"captcha_challenge_phrase_holder\" style=\"display: none;\">"
-		out << "  <input type=\"hidden\" name=\"captcha_challenge_phrase\" id=\"captcha_challenge_phrase\" value=\"${challengePhrase}\">"
-		out << "</span>"
-
-
-		out << "<div id=\"captcha_image\">"
-		out << "  <img height=\"${height}\" width=\"${width}\" src=\"/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
-		out << "</div>"
-
 	}
 
 }

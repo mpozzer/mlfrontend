@@ -29,5 +29,10 @@ class MLFeUrlMappings {
 				site(matches: /[A-Z]{3}/)
 			}
 		}
+		
+		"/captcha.jpg" {
+			controller = "captchaImage"
+		}
+		
 	}
 }
