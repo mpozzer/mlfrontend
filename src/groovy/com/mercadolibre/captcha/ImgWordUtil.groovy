@@ -37,6 +37,35 @@ public class ImgWordUtil {
 	
 	private static String CAPTCHA_FONTS = "SansSerif;Monospaced;ARIAL;VERDANA;"
 	
+	private static alphabet = [
+		'a',
+		'G',
+		'F',
+		'Y',
+		'M',
+		'e',
+		'b',
+		'P',
+		'W',
+		'E',
+		's',
+		'L',
+		'Z',
+		'c',
+		'J',
+		'O',
+		'U',
+		'p',
+	]
+	
+	static getAlphabet() {
+	  return alphabet	
+	}
+	
+	static void setAlphabet(chars) {
+	  alphabet = chars
+	}
+	
 	/**
 	 * 
 	 * @param imgText
@@ -47,7 +76,7 @@ public class ImgWordUtil {
 	 * 
 	 * @return
 	 */
-	public static BufferedImage getBufferedImage(String imgText, int width, int height, Color color){
+	public static BufferedImage getBufferedImage(String imgText, int width, int height, Color color, String fontType) {
 		//Crear imagen (es el container)
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
 		
@@ -56,8 +85,21 @@ public class ImgWordUtil {
 		
         //Desde ahora todo lo que se dibuja se dibuja en azul
         g2d.setColor(color);
+		
+		
+		int fontTypeInt
+		if (fontType == "plain") {
+		  fontTypeInt = Font.PLAIN
+		}
+		if (fontType == "bold") {
+		  fontTypeInt = Font.BOLD
+		}
+		if (fontType == "italic") {
+		  fontTypeInt = Font.ITALIC
+		}
+		
 		//Dibujar las letras, con el espaciado entre letras dado como parametro
-		CaptchaWord captchaWord= new CaptchaWord(imgText, getRandomFontName(), CAPTCHA_WORD_KERNING, true);
+		CaptchaWord captchaWord = new CaptchaWord(imgText, getRandomFontName(), fontTypeInt, CAPTCHA_WORD_KERNING, true);
 		captchaWord.drawString(g2d, width, height);
 		
 		//Deformar el grafico
@@ -235,7 +277,7 @@ public class ImgWordUtil {
     	StringBuilder word = new StringBuilder(wordLength);
 		
 		for (int j = 0; j < wordLength; j++) {
-			word.append(captchars[generator.nextInt(captchars.length)]);
+			word.append(getAlphabet()[generator.nextInt(getAlphabet().size())]);
 		}
    
     	return word.toString();
@@ -298,49 +340,6 @@ public class ImgWordUtil {
 	public static String encrypt(String code) throws Exception {
 		return Crypter.encryptDES(code, getCurrentPsw());
 	}
-	
-    private static char[] captchars = 
-		[
-		'a',
-        'G',
-        'F',
-		'Y',
-		'M',
-		'e',
-		'b',
-		'P',
-		'W',
-		'E',
-		's',
-		'L',
-		'Z',
-		'c',
-		'J',
-		'O',
-		'U',
-		'p',
-		]
     
-    
-//	public static void main(String[] args) throws Exception {
-//		for(int i=0; i < 6; i++){
-//			long start = System.currentTimeMillis();
-//	
-//			String test = generateWord();
-//	
-//			BufferedImage bi = ImgWordUtil.getBufferedImage(test, 140, 70);
-//			
-//			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-//			JAI.create("encode", bi, outStream, "PNG", null);
-//			//ImageIO.write(bi, "JPG", outStream);
-//		    byte[] out = outStream.toByteArray();	
-//		    System.out.println("ln: "+out.length);
-//
-//		    System.out.println("ms: "+(System.currentTimeMillis()-start));
-//		
-//			storeImage(out, "C:\\Documents and Settings\\mpozzer\\Escritorio\\captcha"+i+"v1.jpg");
-//		}
-//
-//	}
 }
 

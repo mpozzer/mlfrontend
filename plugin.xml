@@ -1,4 +1,4 @@
-<plugin name='mlfrontend' version='0.8.6' grailsVersion='1.3.7 &gt; *'>
+<plugin name='mlfrontend' version='0.8.7' grailsVersion='1.3.7 &gt; *'>
   <author>Pablo Moretti / Pablo Duranti</author>
   <authorEmail>pablo.moretti@mercadolibre.com / pablo.duranti@mercadolibre.com </authorEmail>
   <title>MercadoLibre Frontend</title>
@@ -17,6 +17,7 @@
     <resource>com.mercadolibre.frontend.SampleController</resource>
     <resource>com.mercadolibre.frontend.services.HtmlCompressionService</resource>
     <resource>com.mercadolibre.frontend.services.JavasScriptCompressionService</resource>
+    <resource>com.mercadolibre.frontend.services.MLCaptchaService</resource>
     <resource>com.mercadolibre.frontend.services.MLDomainsResolver</resource>
     <resource>com.mercadolibre.frontend.services.MLDomainsResolverStub</resource>
     <resource>com.mercadolibre.taglib.CaptchaTagLib</resource>

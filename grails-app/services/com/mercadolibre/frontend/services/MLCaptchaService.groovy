@@ -26,7 +26,8 @@ class MLCaptchaService {
 		  text,
 		  CAPTCHA_EXTENSION,
 		  (width?width.toInteger():DEFAULT_WIDTH),
-		  (height?height.toInteger():DEFAULT_HEIGHT));
+		  (height?height.toInteger():DEFAULT_HEIGHT),
+		  (CH.config.captcha.fontType)?CH.config.captcha.fontType:"bold");
 				
         model.generateImage();
 		return model
@@ -39,6 +40,7 @@ class MLCaptchaService {
 	 * @return the captcha phrase is encrypted to be secure and encoded for a URL
 	 */
 	public String getNewChallenge() {
+		ImgWordUtil.setAlphabet(CH.config.captcha.alphabet)
 		return ImgWordUtil.encodeUrl(ImgWordUtil.generateWord(CH.config['captcha'].word_length) + "|" + DEFAULT_SALT, true)
 	}
 	
