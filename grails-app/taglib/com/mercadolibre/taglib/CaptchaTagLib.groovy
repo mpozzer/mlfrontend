@@ -7,23 +7,19 @@ package com.mercadolibre.taglib
  */
 class CaptchaTagLib {
 
-	static namespace = 'captcha'
+	static namespace = 'ml'
 	
 	def mlCaptchaService
 	
-	def word = { attrs ->
+	def captcha = { attrs ->
+	    def urlBase = attrs.remove('urlBase')?:'/'
+		
 		def height = attrs.height
 		def width = attrs.width
 
 		def challengePhrase = mlCaptchaService.getNewChallenge()
 
-		out << "<span id=\"captcha_challenge_phrase_holder\" style=\"display: none;\">"
-		out << "  <input type=\"hidden\" name=\"captcha_word\" id=\"captcha_word\" value=\"${challengePhrase}\">"
-		out << "</span>"
-
-
-		out << "<div id=\"captcha_image\">"
-		out << "  <img height=\"${height}\" width=\"${width}\" src=\"/captcha.jpg?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
-		out << "</div>"
+		out << "  <img name=\"captcha_image\" height=\"${height}\" width=\"${width}\" src=\"${urlBase}captcha.jpg?id=${challengePhrase}&height=${height}&width=${width}\" >"
+		out << "  <input type=\"hidden\" name=\"captcha_word\" value=\"${challengePhrase}\">"
 	}
 }

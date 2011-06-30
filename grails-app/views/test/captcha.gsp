@@ -11,7 +11,7 @@
 		</g:if>
 		
 		<form name="captcha" method="post">
-		Que ves en la imagen?: <captcha:word width="300" height="120"/>
+		Que ves en la imagen?: <ml:captcha width="300" height="120"/>
 		<br>
 		<input type="text" name="captcha_response" />
 		<br>

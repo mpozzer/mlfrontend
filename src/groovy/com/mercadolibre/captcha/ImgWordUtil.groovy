@@ -215,22 +215,21 @@ public class ImgWordUtil {
     
     /**
      * <p>Genera una palabra de largo variable. Parametrizable a traves de:
-     * <ul><li>CAPTCHA_WORD_LENGTH</li><li>CAPTCHA_WORD_LENGTH_VAR</li></ul>
+     * {@code captcha.wordLength}
      * </p>
      * 
-     * @author mpozzer 28/07/2009 cantidad de caracteres variables
+     * @author pduranti
      * 
      * @return
      * @throws Exception
      */
-    public static String generateWord() throws Exception {
-    	int minWordLength = CAPTCHA_WORD_LENGTH;
+    public static String generateWord(wordLength) throws Exception {
+    	wordLength = wordLength?:CAPTCHA_WORD_LENGTH;
 		int wordLengthVariation= CAPTCHA_WORD_LVAR;
-		int wordLength = minWordLength
 		
 		// randomize the work length 
 		if (wordLengthVariation != 0) {
-		  wordLength = minWordLength + generator.nextInt(wordLengthVariation + 1);
+		  wordLength = wordLength + generator.nextInt(wordLengthVariation + 1);
 		}
 		
     	StringBuilder word = new StringBuilder(wordLength);

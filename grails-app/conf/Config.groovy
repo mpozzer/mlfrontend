@@ -26,6 +26,10 @@ log4j = {
 	
 }
 
+captcha {
+	word_length = 6
+}
+
 ROOT {
 	url {
 		baseStatic = 'http://localhost:8080'

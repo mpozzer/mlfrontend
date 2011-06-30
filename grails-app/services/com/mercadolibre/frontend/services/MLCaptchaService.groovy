@@ -1,5 +1,10 @@
-package com.mercadolibre.captcha
+package com.mercadolibre.frontend.services
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+
+import com.mercadolibre.captcha.ImgWordModel
+import com.mercadolibre.captcha.ImgWordUtil
+ 
 class MLCaptchaService {
 
 	private String CAPTCHA_EXTENSION = "JPEG"
@@ -30,10 +35,11 @@ class MLCaptchaService {
 	
 	/**
 	 * Get a new captcha challenge phrase for a URL
+	 * Word length is configurable via: CH.captcha.word_length
 	 * @return the captcha phrase is encrypted to be secure and encoded for a URL
 	 */
 	public String getNewChallenge() {
-		return ImgWordUtil.encodeUrl(ImgWordUtil.generateWord() + "|" + DEFAULT_SALT, true)
+		return ImgWordUtil.encodeUrl(ImgWordUtil.generateWord(CH.config['captcha'].word_length) + "|" + DEFAULT_SALT, true)
 	}
 	
 	/**
