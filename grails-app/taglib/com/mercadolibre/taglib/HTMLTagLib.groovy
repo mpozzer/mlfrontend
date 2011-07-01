@@ -119,10 +119,7 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
-		
-		def urlBase = (attrs.urlBase != null)?:SBC.getConfig(params.siteId).url['baseStatic'];
-
-		String scriptResource = "${urlBase}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
+		String scriptResource = "${getUrlBase(attrs)}js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
 
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
@@ -136,12 +133,9 @@ class HTMLTagLib {
 
 
 	def link = { attrs ->
-		
-		def urlBase = (attrs.urlBase != null)?:SBC.getConfig(params.siteId).url['baseStatic'];
-		
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-		out << "${urlBase}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
+		out << "${getUrlBase(attrs)}css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
 		out << "\""
 		out << "/>"
 	}
@@ -159,6 +153,22 @@ class HTMLTagLib {
 		out << '<![endif]-->'
 		out << '<link rel="shortcut icon" href="https://www.mercadolibre.com/favicon.ico" />\n'
 		out << '</head>'
+	}
+
+	String getUrlBase(attrs){
+		String urlBase
+
+		if(attrs.urlBase != null){
+			urlBase = attrs.urlBase
+		}else{
+			urlBase = SBC.getConfig(params.siteId).url['baseStatic'];
+		}
+
+		if(!urlBase.endsWith("/")){
+			urlBase += "/"
+		}
+
+		return urlBase
 	}
 
 }
