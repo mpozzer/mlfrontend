@@ -20,7 +20,11 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 	SimpleRestClient simpleRestClient
 	def connectionRetries = 3
 	
-
+	protected def domains = [ "mla":"www.mercadolibre.com.ar", "mlb":"www.mercadolivre.com.br", "mco": "www.mercadolibre.com.co",
+							   "mcr":"www.mercadolibre.co.cr", "mlc":"www.mercadolibre.cl", "mrd":"www.mercadolibre.com.do",
+							   "mec":"www.mercadolibre.com.ec", "mlm":"www.mercadolibre.com.mx", "mpa":"www.mercadolibre.com.pa", 
+							   "mpe":"www.mercadolibre.com.pe", "mpt":"www.mercadolivre.pt", "mlu":"www.mercadolibre.com.uy",
+							   "mlv":"www.mercadolibre.com.ve" ]
 	private static def SITES_DOMAINS = []
 
 	public void afterPropertiesSet() {
@@ -54,11 +58,37 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 	}
 	
 	public String getRequestSite(request) {
-		String serverName = request.serverName;
+		String serverName = resolveDomain(request)
 		def matchingDomain = SITES_DOMAINS.find({ d ->
 			serverName.endsWith(d.id)
 			})
 		return matchingDomain?.site_id?.toString()
 	}
 	
+	private String resolveDomain(req){
+		String domain = req.serverName;
+		String forwardURI = req.forwardURI;
+		String siteIdPattern = ""
+		Boolean isDotComDomain = false
+		if (domain.endsWith("mercadopago.com")){
+
+			siteIdPattern = ".*/(\\w{3})/.*";
+			isDotComDomain = forwardURI.matches(siteIdPattern)
+
+		}else{
+			siteIdPattern = ".*/jms/(\\w{3})/.*";
+			isDotComDomain = forwardURI.matches(siteIdPattern)
+		}
+
+
+		if(!StringUtils.isEmpty(domain) && domain.endsWith(".com") && isDotComDomain){
+			String siteId = null
+			forwardURI.eachMatch(siteIdPattern){
+				siteId = it[1]
+			}
+			domain = domains[siteId]
+		}
+
+		return domain
+	}
 }

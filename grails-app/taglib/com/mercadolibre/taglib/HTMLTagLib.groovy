@@ -7,6 +7,7 @@ import com.mercadolibre.frontend.util.HTMLUtil;
 import com.mercadolibre.frontend.util.HostNameResolver;
 
 class HTMLTagLib {
+	def mlDomainsResolver
 
 	static namespace = 'ml'
 
@@ -119,7 +120,7 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
-		String scriptResource = "${getUrlBase(attrs)}js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
+		String scriptResource = "${getUrlBase(attrs)}js/${mlDomainsResolver.getRequestSite(request)}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
 
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
@@ -135,7 +136,7 @@ class HTMLTagLib {
 	def link = { attrs ->
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-		out << "${getUrlBase(attrs)}css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
+		out << "${getUrlBase(attrs)}css/${mlDomainsResolver.getRequestSite(request)}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
 		out << "\""
 		out << "/>"
 	}
@@ -161,7 +162,7 @@ class HTMLTagLib {
 		if(attrs.urlBase != null){
 			urlBase = attrs.urlBase
 		}else{
-			urlBase = SBC.getConfig(params.siteId).url['baseStatic'];
+			urlBase = SBC.getConfig(mlDomainsResolver.getRequestSite(request)).url['baseStatic'];
 		}
 
 		if(!urlBase.endsWith("/")){

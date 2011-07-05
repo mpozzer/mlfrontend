@@ -19,11 +19,7 @@ import com.mercadolibre.frontend.commons.SiteBasedConfiguration as SBC
  * @author pduranti
  */
 abstract class ResourceController {
-
-	def beforeInterceptor = {
-		params.siteId = request.getParameter("siteId")
-	}
-	
+	def mlDomainsResolver
 	def groovyTemplateEngine
 	
 	def index = {
@@ -84,7 +80,8 @@ abstract class ResourceController {
 	}
 	
 	private getDefaultParams() {
-		return [show: true, siteId: params.siteId, baseStatic: SBC.getConfig(params.siteId).url['baseStatic']]
+		String siteId = mlDomainsResolver.getRequestSite(request)
+		return [show: true, siteId: siteId, baseStatic: SBC.getConfig(siteId).url['baseStatic']]
 	}
 	
 	private removeExtension(fileName) {
