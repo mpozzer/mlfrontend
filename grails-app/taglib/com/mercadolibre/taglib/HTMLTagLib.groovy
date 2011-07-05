@@ -120,7 +120,7 @@ class HTMLTagLib {
 	 */
 	def script = { attrs, body ->
 		
-		def urlBase = (attrs.urlBase != null)?:SBC.getConfig(params.siteId).url['baseStatic'];
+		def urlBase = (attrs.urlBase != null)?attrs.urlBase:SBC.getConfig(params.siteId).url['baseStatic'];
 
 		String scriptResource = "${urlBase}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
 
@@ -137,7 +137,7 @@ class HTMLTagLib {
 
 	def link = { attrs ->
 		
-		def urlBase = (attrs.urlBase != null)?:SBC.getConfig(params.siteId).url['baseStatic'];
+		def urlBase = (attrs.urlBase != null)?attrs.urlBase:SBC.getConfig(params.siteId).url['baseStatic'];
 		
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
