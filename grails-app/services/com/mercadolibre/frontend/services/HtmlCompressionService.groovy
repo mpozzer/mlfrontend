@@ -12,6 +12,8 @@ import com.googlecode.htmlcompressor.compressor.HtmlCompressor
  */
 class HtmlCompressionService {
 	
+	static transactional = false
+	
 	private HtmlCompressor compressor
 	
 	public HtmlCompressionService() {
