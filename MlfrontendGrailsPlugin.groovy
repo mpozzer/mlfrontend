@@ -44,7 +44,11 @@ class MlfrontendGrailsPlugin {
 		}
 
 		def mappings = xml.'filter-mapping'
-		mappings[mappings.size() - 1] + {
+		int i = 0
+
+		for(; i < mappings.size() && mappings[i].'filter-name'!='charEncodingFilter'; i++);
+
+		mappings[i] + {
 			'filter-mapping'{
 				'filter-name'('MlFilter')
 				'url-pattern'('/*')
