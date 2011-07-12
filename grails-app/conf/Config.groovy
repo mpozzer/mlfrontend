@@ -26,6 +26,10 @@ log4j = {
 	
 }
 
+plugin {
+  excludes = "hibernate, domain"
+}
+
 captcha {
 	word_length = 6
 }
