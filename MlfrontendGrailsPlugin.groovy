@@ -5,7 +5,7 @@ import grails.util.Environment
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "0.8.11"
+	def version = "0.8.12"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on

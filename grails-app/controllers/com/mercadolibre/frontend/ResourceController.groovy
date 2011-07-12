@@ -102,8 +102,10 @@ abstract class ResourceController {
 	 * Process the string as a GSP template
 	 */
 	private processTemplate(text) {
-		def output = new StringWriter()
-		groovyTemplateEngine.createTemplate(text, 'sample').make(getDefaultParams()).writeTo(output)
-		return output.toString()
+		return text
+//      TODO: pduranti - deshabilitamos el procesamiento de templates en resources, para mejorarlo en la proxima release
+//		def output = new StringWriter()
+//		groovyTemplateEngine.createTemplate(text, 'sample').make(getDefaultParams()).writeTo(output)
+//		return output.toString()
 	}
 }
