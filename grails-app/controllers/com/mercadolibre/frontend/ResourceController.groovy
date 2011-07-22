@@ -31,7 +31,7 @@ abstract class ResourceController {
 		response.setHeader("Content-type", contentType)
 
 		if (params.appVersion != grailsApplication.metadata['app.version']) {
-		  response.setHeader("Cache-Control","max-age=10000,public")
+		  response.setHeader("Cache-Control","max-age=10,public")
 		} else {
 		  response.setHeader("Cache-Control", "max-age=2592000,public")
 		}
