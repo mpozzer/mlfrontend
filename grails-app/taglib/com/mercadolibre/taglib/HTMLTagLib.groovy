@@ -134,6 +134,7 @@ class HTMLTagLib {
 
 
 	def link = { attrs ->
+		def urlBase = (attrs.urlBase != null)?attrs.urlBase:SBC.getConfig(params.siteId).url['baseStatic'];
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
 		out << "${getUrlBase(attrs)}css/${mlDomainsResolver.getRequestSite(request)}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"

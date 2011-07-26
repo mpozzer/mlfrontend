@@ -7,6 +7,8 @@ import com.mercadolibre.captcha.ImgWordUtil
  
 class MLCaptchaService {
 
+	static transactional = false
+	
 	private String CAPTCHA_EXTENSION = "JPEG"
 	private Integer DEFAULT_WIDTH = 140
 	private Integer DEFAULT_HEIGHT = 85
