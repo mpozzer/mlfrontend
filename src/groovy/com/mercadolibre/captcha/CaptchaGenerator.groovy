@@ -37,7 +37,7 @@ public class CaptchaGenerator {
 	
 	private static String CAPTCHA_FONTS = "SansSerif;Monospaced;ARIAL;VERDANA;"
 
-	def static alphabet = (CH.config.captcha?.alphabet)?(CH.config.captcha.alphabet):'aGFYMebPWEsLZcJOUp'
+	def static alphabet = (CH.config.captcha?.alphabet)?:'aGFYMebPWEsLZcJOUp'
 		
 
 	/**
