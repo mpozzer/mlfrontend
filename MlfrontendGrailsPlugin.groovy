@@ -71,17 +71,19 @@ class MlfrontendGrailsPlugin {
 			}
 			soTimeout = 1000
 		}
-
-		captchaStorageService(com.mercadolibre.frontend.services.CaptchaStorageService)
-		captchaStorageServiceStub(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
+		
+		if(Environment.current != Environment.PRODUCTION){
+			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageService) { bean ->
+				hostname = CH.config.captcha.memcached.hostname ?: "127.0.0.1" //"172.16.139.87"
+				port = CH.config.captcha.memcached.port ?: 11211
+				expirationTime = CH.config.captcha.memcached.expirationTime ?: 1800 //30min
+			}
+		} else {
+			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
+		}
 
 		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
-			if(Environment.current == Environment.PRODUCTION){
-				captchaStorageService = ref("captchaStorageService")
-			}
-			else{
-				captchaStorageService = ref("captchaStorageServiceStub")
-			}
+			captchaStorageService = ref("captchaStorage")
 		}
 
 		mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)

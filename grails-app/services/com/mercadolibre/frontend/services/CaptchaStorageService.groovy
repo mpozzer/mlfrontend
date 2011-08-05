@@ -1,17 +1,19 @@
 package com.mercadolibre.frontend.services
 
-import net.spy.memcached.AddrUtil
 import net.spy.memcached.MemcachedClient
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.springframework.beans.factory.InitializingBean
 
-class CaptchaStorageService {
+class CaptchaStorageService implements InitializingBean {
 
 	static transactional = false
-
-	MemcachedClient client = new MemcachedClient(new InetSocketAddress(CH.config.captcha.memcached.hostname, CH.config.captcha.memcached.port))
 	
-	static def expirationTime = CH.config.captcha.memcached.expirationTime
+	def hostname
+	def port
+	def expirationTime
+
+	MemcachedClient client
+	
 
 	public get(key) {
 		client.get(key)
@@ -27,6 +29,10 @@ class CaptchaStorageService {
 	
 	public delete(key){
 		client.delete(key)
+	}
+	
+	public void afterPropertiesSet() throws Exception {
+		client = new MemcachedClient(new InetSocketAddress(hostname, port))
 	}
 
 }
