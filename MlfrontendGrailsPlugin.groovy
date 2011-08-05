@@ -72,7 +72,11 @@ class MlfrontendGrailsPlugin {
 			soTimeout = 1000
 		}
 
-		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService)
+		captchaStorageService(com.mercadolibre.frontend.services.CaptchaStorageService)
+
+		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
+			captchaStorageService = ref('captchaStorageService')
+		}
 
 		mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)
 

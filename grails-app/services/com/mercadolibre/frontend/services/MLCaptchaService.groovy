@@ -7,6 +7,8 @@ import com.mercadolibre.captcha.ImgWordUtil
  
 class MLCaptchaService {
 
+	def captchaStorageService
+	
 	static transactional = false
 	
 	private String CAPTCHA_EXTENSION = "JPEG"
@@ -22,7 +24,7 @@ class MLCaptchaService {
 	 * @return
 	 */
 	public ImgWordModel generateImage(captchaHash, Integer width, Integer height) {
-		def text = getCaptchaTextForHash(captchaHash)
+		def text = captchaStorageService.get(captchaHash)
 		
 		ImgWordModel model = new ImgWordModel(
 		  text,
@@ -43,28 +45,31 @@ class MLCaptchaService {
 	 */
 	public String getNewChallenge() {
 		ImgWordUtil.setAlphabet(CH.config.captcha.alphabet)
-		return ImgWordUtil.encodeUrl(ImgWordUtil.generateWord(CH.config['captcha'].word_length) + "|" + DEFAULT_SALT, true)
+
+		def word = ImgWordUtil.generateWord(CH.config.captcha.word_length)
+		
+		def captchaKey = URLEncoder.encode(UUID.randomUUID().toString(),"UTF-8")
+
+		captchaStorageService.set(captchaKey, word)
+
+		return captchaKey
 	}
 	
 	/**
 	 * Validates a given captchaChallenge hash against a user response
 	 */
-	public Boolean isValidAnswer(String captchaChallenge, String captchaResponse) {
-		def dec = URLDecoder.decode(captchaChallenge, "UTF-8")
-		return getCaptchaTextForHash(dec).equalsIgnoreCase(captchaResponse)
+	public Boolean isValidAnswer(String captchaChallenge, String userResponse) {
+		
+		if (!userResponse || !captchaChallenge)
+			return false
+
+		def code = String.valueOf(Math.random())
+		
+		captchaStorageService.append(captchaChallenge,code)
+		
+		def word = captchaStorageService.get(captchaChallenge)
+
+		return (word).equalsIgnoreCase(userResponse+code);
 	}
 
-	
-	private String getCaptchaTextForHash(captchaHash) {
-		String kwd = ImgWordUtil.decrypt(captchaHash);
-		
-		def tok = new StringTokenizer(kwd, "|");
-		def text
-		if (tok.hasMoreTokens()) {
-			text = tok.nextToken()
-		} else {
-			text = kwd;
-		}
-		return text
-	}
 }

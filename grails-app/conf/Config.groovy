@@ -31,7 +31,16 @@ plugin {
 }
 
 captcha {
-	word_length = 6
+	fontType = "plain"
+	word_length = 5
+    alphabet = ['a', 'G', 'F', 'Y', 'M', 'e', 'B', 'P', 'W', 'E', 's', 'L', 'Z', 'c', 'J', 'O', 'U', 'p', 'X', 'g', 'H', 'k', 'Q', 'r', 't', 'v', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+	memcached {
+		//hostname = "172.16.139.87"
+		hostname = "127.0.0.1"
+		port = 11211
+		expirationTime = 1800 //30min
+		invalidationTime = 180
+	}
 }
 
 ROOT {
