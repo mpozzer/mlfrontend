@@ -72,7 +72,7 @@ class MlfrontendGrailsPlugin {
 			soTimeout = 1000
 		}
 		
-		if(Environment.current != Environment.PRODUCTION){
+		if(Environment.current == Environment.PRODUCTION){
 			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageService) { bean ->
 				hostname = CH.config.captcha.memcached.hostname ?: "127.0.0.1" //"172.16.139.87"
 				port = CH.config.captcha.memcached.port ?: 11211

@@ -1,4 +1,4 @@
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.Environment
 
 beans = {
 //	simpleRestClient(com.mercadolibre.opensource.frameworks.restclient.SimpleRestClient) { bean ->

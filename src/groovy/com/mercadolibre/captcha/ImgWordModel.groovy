@@ -32,7 +32,7 @@ public class ImgWordModel {
 
 	public void generateImage() {
 		try {
-			BufferedImage bi = ImgWordUtil.getBufferedImage(txt, w, h, fontColor, fontType);
+			BufferedImage bi = CaptchaGenerator.getBufferedImage(txt, w, h, fontColor, fontType);
 			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
 		    JAI.create("encode", bi, outStream, type, null);
 			out = outStream
