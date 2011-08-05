@@ -73,9 +73,15 @@ class MlfrontendGrailsPlugin {
 		}
 
 		captchaStorageService(com.mercadolibre.frontend.services.CaptchaStorageService)
+		aptchaStorageServiceStub(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
 
 		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
-			captchaStorageService = ref('captchaStorageService')
+			if(Environment.current == Environment.PRODUCTION){
+				captchaStorageService = "captchaStorageService"
+			}
+			else{
+				captchaStorageService = "captchaStorageServiceStub"
+			}
 		}
 
 		mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)
