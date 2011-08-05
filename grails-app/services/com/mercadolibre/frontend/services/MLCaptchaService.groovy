@@ -3,7 +3,7 @@ package com.mercadolibre.frontend.services
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
 import com.mercadolibre.captcha.ImgWordModel
-import com.mercadolibre.captcha.ImgWordUtil
+import com.mercadolibre.captcha.CaptchaGenerator
  
 class MLCaptchaService {
 
@@ -44,9 +44,7 @@ class MLCaptchaService {
 	 * @return the captcha phrase is encrypted to be secure and encoded for a URL
 	 */
 	public String getNewChallenge() {
-		ImgWordUtil.setAlphabet(CH.config.captcha.alphabet)
-
-		def word = ImgWordUtil.generateWord(CH.config.captcha.word_length)
+		def word = CaptchaGenerator.generateWord(CH.config.captcha.word_length)
 		
 		def captchaKey = URLEncoder.encode(UUID.randomUUID().toString(),"UTF-8")
 

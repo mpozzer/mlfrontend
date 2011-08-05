@@ -19,9 +19,9 @@ import java.util.Random
 
 import org.apache.log4j.Logger
 
-import com.mercadolibre.crypt.Crypter
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
-public class ImgWordUtil {
+public class CaptchaGenerator {
 	
 	static final SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
 	
@@ -36,36 +36,10 @@ public class ImgWordUtil {
 	private static Integer CAPTCHA_WORD_LVAR = 0
 	
 	private static String CAPTCHA_FONTS = "SansSerif;Monospaced;ARIAL;VERDANA;"
-	
-	private static alphabet = [
-		'a',
-		'G',
-		'F',
-		'Y',
-		'M',
-		'e',
-		'b',
-		'P',
-		'W',
-		'E',
-		's',
-		'L',
-		'Z',
-		'c',
-		'J',
-		'O',
-		'U',
-		'p',
-	]
-	
-	static getAlphabet() {
-	  return alphabet	
-	}
-	
-	static void setAlphabet(chars) {
-	  alphabet = chars
-	}
-	
+
+	def static alphabet = (CH.config.captcha?.alphabet)?(CH.config.captcha.alphabet):'aGFYMebPWEsLZcJOUp'
+		
+
 	/**
 	 * 
 	 * @param imgText
@@ -277,69 +251,11 @@ public class ImgWordUtil {
     	StringBuilder word = new StringBuilder(wordLength);
 		
 		for (int j = 0; j < wordLength; j++) {
-			word.append(getAlphabet()[generator.nextInt(getAlphabet().size())]);
+			word.append(alphabet[generator.nextInt(alphabet.size())]);
 		}
    
     	return word.toString();
     }
-	
-
-    public static String encodeUrl(String word, boolean encrypt) throws UnsupportedEncodingException {
-    	String kwd;
-    	if (encrypt) {
-          kwd = URLEncoder.encode(this.encrypt(word), "UTF-8");
-        } else {
-    	  kwd = URLEncoder.encode(word, "UTF-8");
-        }
-    	return kwd;
-    }
-//    public static String URLEncode(String word, String encoding, boolean encrypt) throws UnsupportedEncodingException {
-//    	String kwd;
-//    	if( encrypt ) {
-//    		try {
-//    			kwd = URLEncoder.encode(encode(word), encoding);
-//			} catch (Exception e) {
-//				try {				
-//					LibWeb.logError("WordUtil", "URLEncode", "MLA", e);
-//				} catch( Exception e1) {
-//					e.printStackTrace();
-//				}
-//				kwd = null;
-//			}
-//    	} else 
-//    		kwd = URLEncoder.encode(word, encoding);
-//    	
-//    	return kwd;
-//    }
-	
-    public static String decodeURL(String word, boolean decrypt) throws UnsupportedEncodingException {
-    	String kwd;
-    	if (decrypt) {    		
-          kwd = this.decrypt(URLDecoder.decode(word, "UTF-8"));
-    	} else 
-    	  kwd = URLDecoder.decode(word, "UTF-8");   	
-    	return kwd;
-    }
-	
-//    public static String getNewWordURLCoded() throws UnsupportedEncodingException, Exception {
-//    	return URLEncode(generateWord(), true);
-//    }
-//	
-//    public static String getNewWordURLCoded(String encoding) throws UnsupportedEncodingException, Exception {
-//    	return URLEncode(generateWord(), encoding, true);
-//    }
-	
-    public static String getCurrentPsw() throws Exception {
-    	return "MercadoLibre" + fmt.format(System.currentTimeMillis());
-    }
-	
-	public static String decrypt(String crypted) throws Exception {
-		return Crypter.decryptDES(crypted, getCurrentPsw());	
-	}
-	
-	public static String encrypt(String code) throws Exception {
-		return Crypter.encryptDES(code, getCurrentPsw());
-	}
     
 }
 
