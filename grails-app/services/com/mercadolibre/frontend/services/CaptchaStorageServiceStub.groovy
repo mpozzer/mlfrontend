@@ -10,7 +10,7 @@ class CaptchaStorageServiceStub {
 		cache[key]
 	}
 	
-	public set(key, value){
+	public set(String key, String value){
 		cache[key] = value
 	}
 	

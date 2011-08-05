@@ -73,14 +73,14 @@ class MlfrontendGrailsPlugin {
 		}
 
 		captchaStorageService(com.mercadolibre.frontend.services.CaptchaStorageService)
-		aptchaStorageServiceStub(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
+		captchaStorageServiceStub(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
 
 		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
 			if(Environment.current == Environment.PRODUCTION){
-				captchaStorageService = "captchaStorageService"
+				captchaStorageService = ref("captchaStorageService")
 			}
 			else{
-				captchaStorageService = "captchaStorageServiceStub"
+				captchaStorageService = ref("captchaStorageServiceStub")
 			}
 		}
 

@@ -12,7 +12,6 @@ class CaptchaStorageService {
 	MemcachedClient client = new MemcachedClient(new InetSocketAddress(CH.config.captcha.memcached.hostname, CH.config.captcha.memcached.port))
 	
 	static def expirationTime = CH.config.captcha.memcached.expirationTime
-	static def invalidationTime = CH.config.captcha.memcached.invalidationTime
 
 	public get(key) {
 		client.get(key)
