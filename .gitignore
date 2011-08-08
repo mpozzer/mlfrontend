@@ -3,6 +3,7 @@
 .settings/
 target/
 web-app/WEB-INF/classes/
+newrelic.log
 grails-seo-*.zip
 mlfrontend-*
 stacktrace.log
