@@ -8,6 +8,8 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor
  */
 class JavasScriptCompressionService {
 	
+	static transactional = false
+	
 	String compress(script) {
 		JavaScriptCompressor compressor = new JavaScriptCompressor(new StringReader(script.toString()), null)
 		StringWriter write = new StringWriter()

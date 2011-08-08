@@ -34,6 +34,9 @@ public class MLParamsAwareFilter extends OncePerRequestFilter implements Applica
 	public void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		log.debug("MLParamsAwareFilter enter");
+		
+		request.setAttribute("com.mercadolibre.frontend.StartRequest",System.currentTimeMillis());
+
 		ParametersWrappedRequest paramsRequest = new ParametersWrappedRequest(request);
 		if (request.getParameter(SITE_ID) == null) {
 			// add siteId parameter if not included in query string

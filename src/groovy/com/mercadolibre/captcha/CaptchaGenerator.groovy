@@ -19,9 +19,9 @@ import java.util.Random
 
 import org.apache.log4j.Logger
 
-import com.mercadolibre.crypt.Crypter
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
-public class ImgWordUtil {
+public class CaptchaGenerator {
 	
 	static final SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
 	
@@ -36,7 +36,10 @@ public class ImgWordUtil {
 	private static Integer CAPTCHA_WORD_LVAR = 0
 	
 	private static String CAPTCHA_FONTS = "SansSerif;Monospaced;ARIAL;VERDANA;"
-	
+
+	def static alphabet = (CH.config.captcha?.alphabet)?:'aGFYMebPWEsLZcJOUp'
+		
+
 	/**
 	 * 
 	 * @param imgText
@@ -47,7 +50,7 @@ public class ImgWordUtil {
 	 * 
 	 * @return
 	 */
-	public static BufferedImage getBufferedImage(String imgText, int width, int height, Color color){
+	public static BufferedImage getBufferedImage(String imgText, int width, int height, Color color, String fontType) {
 		//Crear imagen (es el container)
 		BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED);
 		
@@ -56,8 +59,21 @@ public class ImgWordUtil {
 		
         //Desde ahora todo lo que se dibuja se dibuja en azul
         g2d.setColor(color);
+		
+		
+		int fontTypeInt
+		if (fontType == "plain") {
+		  fontTypeInt = Font.PLAIN
+		}
+		if (fontType == "bold") {
+		  fontTypeInt = Font.BOLD
+		}
+		if (fontType == "italic") {
+		  fontTypeInt = Font.ITALIC
+		}
+		
 		//Dibujar las letras, con el espaciado entre letras dado como parametro
-		CaptchaWord captchaWord= new CaptchaWord(imgText, getRandomFontName(), CAPTCHA_WORD_KERNING, true);
+		CaptchaWord captchaWord = new CaptchaWord(imgText, getRandomFontName(), fontTypeInt, CAPTCHA_WORD_KERNING, true);
 		captchaWord.drawString(g2d, width, height);
 		
 		//Deformar el grafico
@@ -215,133 +231,31 @@ public class ImgWordUtil {
     
     /**
      * <p>Genera una palabra de largo variable. Parametrizable a traves de:
-     * <ul><li>CAPTCHA_WORD_LENGTH</li><li>CAPTCHA_WORD_LENGTH_VAR</li></ul>
+     * {@code captcha.wordLength}
      * </p>
      * 
-     * @author mpozzer 28/07/2009 cantidad de caracteres variables
+     * @author pduranti
      * 
      * @return
      * @throws Exception
      */
-    public static String generateWord() throws Exception {
-    	int minWordLength = CAPTCHA_WORD_LENGTH;
+    public static String generateWord(wordLength) throws Exception {
+    	wordLength = wordLength?:CAPTCHA_WORD_LENGTH;
 		int wordLengthVariation= CAPTCHA_WORD_LVAR;
-		int wordLength = minWordLength
 		
 		// randomize the work length 
 		if (wordLengthVariation != 0) {
-		  wordLength = minWordLength + generator.nextInt(wordLengthVariation + 1);
+		  wordLength = wordLength + generator.nextInt(wordLengthVariation + 1);
 		}
 		
     	StringBuilder word = new StringBuilder(wordLength);
 		
 		for (int j = 0; j < wordLength; j++) {
-			word.append(captchars[generator.nextInt(captchars.length)]);
+			word.append(alphabet[generator.nextInt(alphabet.size())]);
 		}
    
     	return word.toString();
     }
-	
-
-    public static String encodeUrl(String word, boolean encrypt) throws UnsupportedEncodingException {
-    	String kwd;
-    	if (encrypt) {
-          kwd = URLEncoder.encode(this.encrypt(word), "UTF-8");
-        } else {
-    	  kwd = URLEncoder.encode(word, "UTF-8");
-        }
-    	return kwd;
-    }
-//    public static String URLEncode(String word, String encoding, boolean encrypt) throws UnsupportedEncodingException {
-//    	String kwd;
-//    	if( encrypt ) {
-//    		try {
-//    			kwd = URLEncoder.encode(encode(word), encoding);
-//			} catch (Exception e) {
-//				try {				
-//					LibWeb.logError("WordUtil", "URLEncode", "MLA", e);
-//				} catch( Exception e1) {
-//					e.printStackTrace();
-//				}
-//				kwd = null;
-//			}
-//    	} else 
-//    		kwd = URLEncoder.encode(word, encoding);
-//    	
-//    	return kwd;
-//    }
-	
-    public static String decodeURL(String word, boolean decrypt) throws UnsupportedEncodingException {
-    	String kwd;
-    	if (decrypt) {    		
-          kwd = this.decrypt(URLDecoder.decode(word, "UTF-8"));
-    	} else 
-    	  kwd = URLDecoder.decode(word, "UTF-8");   	
-    	return kwd;
-    }
-	
-//    public static String getNewWordURLCoded() throws UnsupportedEncodingException, Exception {
-//    	return URLEncode(generateWord(), true);
-//    }
-//	
-//    public static String getNewWordURLCoded(String encoding) throws UnsupportedEncodingException, Exception {
-//    	return URLEncode(generateWord(), encoding, true);
-//    }
-	
-    public static String getCurrentPsw() throws Exception {
-    	return "MercadoLibre" + fmt.format(System.currentTimeMillis());
-    }
-	
-	public static String decrypt(String crypted) throws Exception {
-		return Crypter.decryptDES(crypted, getCurrentPsw());	
-	}
-	
-	public static String encrypt(String code) throws Exception {
-		return Crypter.encryptDES(code, getCurrentPsw());
-	}
-	
-    private static char[] captchars = 
-		[
-		'a',
-        'G',
-        'F',
-		'Y',
-		'M',
-		'e',
-		'b',
-		'P',
-		'W',
-		'E',
-		's',
-		'L',
-		'Z',
-		'c',
-		'J',
-		'O',
-		'U',
-		'p',
-		]
     
-    
-//	public static void main(String[] args) throws Exception {
-//		for(int i=0; i < 6; i++){
-//			long start = System.currentTimeMillis();
-//	
-//			String test = generateWord();
-//	
-//			BufferedImage bi = ImgWordUtil.getBufferedImage(test, 140, 70);
-//			
-//			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-//			JAI.create("encode", bi, outStream, "PNG", null);
-//			//ImageIO.write(bi, "JPG", outStream);
-//		    byte[] out = outStream.toByteArray();	
-//		    System.out.println("ln: "+out.length);
-//
-//		    System.out.println("ms: "+(System.currentTimeMillis()-start));
-//		
-//			storeImage(out, "C:\\Documents and Settings\\mpozzer\\Escritorio\\captcha"+i+"v1.jpg");
-//		}
-//
-//	}
 }
 

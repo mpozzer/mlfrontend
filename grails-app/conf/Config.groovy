@@ -26,6 +26,16 @@ log4j = {
 	
 }
 
+plugin {
+  excludes = "hibernate, domain"
+}
+
+captcha {
+	fontType = "plain"
+	word_length = 5
+    alphabet = 'aGFYMeBPWEsLZcJOUpXgHkQrtv123456789'
+}
+
 ROOT {
 	url {
 		baseStatic = 'http://localhost:8080'

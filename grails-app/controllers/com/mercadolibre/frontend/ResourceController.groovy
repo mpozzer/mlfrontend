@@ -29,7 +29,12 @@ abstract class ResourceController {
 	def index = {
 
 		response.setHeader("Content-type", contentType)
-		response.setHeader("Cache-Control","max-age=2592000,public")
+
+		if (params.appVersion != grailsApplication.metadata['app.version']) {
+		  response.setHeader("Cache-Control","max-age=10,public")
+		} else {
+		  response.setHeader("Cache-Control", "max-age=2592000,public")
+		}
 
 		StringBuilder sb = new StringBuilder()
 
@@ -97,8 +102,10 @@ abstract class ResourceController {
 	 * Process the string as a GSP template
 	 */
 	private processTemplate(text) {
-		def output = new StringWriter()
-		groovyTemplateEngine.createTemplate(text, 'sample').make(getDefaultParams()).writeTo(output)
-		return output.toString()
+		return text
+//      TODO: pduranti - deshabilitamos el procesamiento de templates en resources, para mejorarlo en la proxima release
+//		def output = new StringWriter()
+//		groovyTemplateEngine.createTemplate(text, 'sample').make(getDefaultParams()).writeTo(output)
+//		return output.toString()
 	}
 }

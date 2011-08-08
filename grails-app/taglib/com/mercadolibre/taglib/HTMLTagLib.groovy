@@ -10,7 +10,6 @@ class HTMLTagLib {
 
 	static namespace = 'ml'
 
-	def mlCaptchaService
 	def htmlCompressionService
 	def javasScriptCompressionService
 
@@ -120,10 +119,7 @@ class HTMLTagLib {
 	 * -Tag body: write the callback function that will be called once the js is loaded.
 	 */
 	def script = { attrs, body ->
-		
-		def urlBase = attrs.urlBase?:SBC.getConfig(params.siteId).url['baseStatic'];
-
-		String scriptResource = "${urlBase}/js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
+		String scriptResource = "${getUrlBase(attrs)}js/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.js${(params.noCompress)?'?noCompress=true':''}"
 
 		def onload = Boolean.valueOf(attrs.onload)
 		if (onload) {
@@ -137,12 +133,10 @@ class HTMLTagLib {
 
 
 	def link = { attrs ->
-		
-		def urlBase = attrs.urlBase?:SBC.getConfig(params.siteId).url['baseStatic'];
-		
+		def urlBase = (attrs.urlBase != null)?attrs.urlBase:SBC.getConfig(params.siteId).url['baseStatic'];
 		def noCompress = Boolean.valueOf(params.noCompress)
 		out << "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-		out << "${urlBase}/css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
+		out << "${getUrlBase(attrs)}css/${params.siteId}/${grailsApplication.metadata['app.version']}/${attrs.resources.join('_')}.css${(params.noCompress)?'?noCompress=true':''}"
 		out << "\""
 		out << "/>"
 	}
@@ -162,24 +156,20 @@ class HTMLTagLib {
 		out << '</head>'
 	}
 
+	String getUrlBase(attrs){
+		String urlBase
 
-	def captcha = { attrs ->
-		def height = attrs.height
-		def width = attrs.width
-		
-		def urlBase = attrs.urlBase?:''
+		if(attrs.urlBase != null){
+			urlBase = attrs.urlBase
+		}else{
+			urlBase = SBC.getConfig(params.siteId).url['baseStatic'];
+		}
 
-		def challengePhrase = mlCaptchaService.getNewChallenge()
+		if(!urlBase.endsWith("/")){
+			urlBase += "/"
+		}
 
-		out << "<span id=\"captcha_challenge_phrase_holder\" style=\"display: none;\">"
-		out << "  <input type=\"hidden\" name=\"captcha_challenge_phrase\" id=\"captcha_challenge_phrase\" value=\"${challengePhrase}\">"
-		out << "</span>"
-
-
-		out << "<div id=\"captcha_image\">"
-		out << "  <img height=\"${height}\" width=\"${width}\" src=\"${urlBase}/captchaImage?id=${challengePhrase}&height=${height}&width=${width}\" style=\"display: block;\">"
-		out << "</div>"
-
+		return urlBase
 	}
 
 }

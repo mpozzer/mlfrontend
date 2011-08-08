@@ -22,6 +22,7 @@ public class CaptchaWord {
 	private String fontName;
 	private final String word;
 	private final String[] characters;
+	private int fontType
 	
 	/**
 	 * 
@@ -36,11 +37,12 @@ public class CaptchaWord {
 	 * 			Cuando este flag esta activado el kerning especificado varia entre el 70% y 
 	 * 			el 100% del su valor absoluto.
 	 */
-	public CaptchaWord(String word, String fontName, float kerning, boolean useRandomKerning) {
+	public CaptchaWord(String word, String fontName, int fontType, float kerning, boolean useRandomKerning) {
 		this.fontName = fontName;
 		this.kerning = kerning;
 		this.useRandomKerning = useRandomKerning;
 		this.word = word;
+		this.fontType = fontType
 		
 		//Desarmar la palabra en letras
 		int wordLength= word.length();
@@ -165,7 +167,7 @@ public class CaptchaWord {
 		while (  wordWidth > width * 0.8f) {
 //        do{
         	fontSize -= 2;
-        	font = new Font(fontName, Font.BOLD, fontSize);
+        	font = new Font(fontName, fontType, fontSize);
         	g2d.setFont( font );
         	wordWidth = g2d.getFontMetrics().stringWidth(word) - ((STANDARD_KERNING - kerning) * (word.length() - 1));
 //        } while (  wordWidth > width * .8f);

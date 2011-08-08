@@ -1,11 +1,12 @@
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 
+
 import com.mercadolibre.frontend.ResourceController
 import grails.util.Environment
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "0.8.6"
+	def version = "0.9.2"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on
@@ -44,7 +45,11 @@ class MlfrontendGrailsPlugin {
 		}
 
 		def mappings = xml.'filter-mapping'
-		mappings[mappings.size() - 1] + {
+		int i = 0
+
+		for(; i < mappings.size() && mappings[i].'filter-name'!='charEncodingFilter'; i++);
+
+		mappings[i] + {
 			'filter-mapping'{
 				'filter-name'('MlFilter')
 				'url-pattern'('/*')
@@ -66,8 +71,20 @@ class MlfrontendGrailsPlugin {
 			}
 			soTimeout = 1000
 		}
+		
+		if(Environment.current == Environment.PRODUCTION){
+			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageService) { bean ->
+				hostname = CH.config.captcha.memcached.hostname ?: "localhost"
+				port = CH.config.captcha.memcached.port ?: 11211
+				expirationTime = CH.config.captcha.memcached.expirationTime ?: 1800 //30min
+			}
+		} else {
+			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
+		}
 
-		mlCaptchaService(com.mercadolibre.captcha.MLCaptchaService)
+		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
+			captchaStorageService = ref("captchaStorage")
+		}
 
 		mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)
 

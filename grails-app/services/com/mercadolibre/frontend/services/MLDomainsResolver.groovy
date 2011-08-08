@@ -17,6 +17,8 @@ import com.mercadolibre.opensource.frameworks.restclient.SimpleRestClient
  */
 class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 
+	static transactional = false
+	
 	SimpleRestClient simpleRestClient
 	def connectionRetries = 3
 	
