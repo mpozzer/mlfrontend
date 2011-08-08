@@ -1,8 +1,8 @@
 package com.mercadolibre.taglib
 
 /**
- * TagLib for ML Captcha words
- * @author pablo
+ * TagLib to render MercadoLibre Captcha
+ * @author pduranti
  *
  */
 class CaptchaTagLib {
@@ -17,9 +17,9 @@ class CaptchaTagLib {
 		def height = attrs.height
 		def width = attrs.width
 
-		def challengePhrase = mlCaptchaService.getNewChallenge()
+		def captchaCode = mlCaptchaService.generateNewCaptchaCode()
 
-		out << "  <img name=\"captcha_image\" height=\"${height}\" width=\"${width}\" src=\"${urlBase}captcha.jpg?id=${challengePhrase}&height=${height}&width=${width}\" >"
-		out << "  <input type=\"hidden\" name=\"captcha_word\" value=\"${challengePhrase}\">"
+		out << "  <img name=\"captcha_image\" height=\"${height}\" width=\"${width}\" src=\"${urlBase}captcha.jpg?id=${captchaCode}&height=${height}&width=${width}\" >"
+		out << "  <input type=\"hidden\" name=\"captcha_word\" value=\"${captchaCode}\">"
 	}
 }

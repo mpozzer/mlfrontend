@@ -11,7 +11,7 @@ class MLCaptchaServiceTests extends GroovyTestCase {
 	
 	@Test
 	public void testDoubleValidationFails() {
-		def captchaKey = mlCaptchaService.getNewChallenge()
+		def captchaKey = mlCaptchaService.generateNewCaptchaCode()
 		def word = captchaStorage.get(captchaKey)
 		
 		assertTrue mlCaptchaService.isValidAnswer(captchaKey, word)
@@ -21,7 +21,7 @@ class MLCaptchaServiceTests extends GroovyTestCase {
 	
 	@Test
 	public void testValidationOK() {
-		def captchaKey = mlCaptchaService.getNewChallenge()
+		def captchaKey = mlCaptchaService.generateNewCaptchaCode()
 		def word = captchaStorage.get(captchaKey)
 		
 		assertTrue mlCaptchaService.isValidAnswer(captchaKey, word)
@@ -29,7 +29,7 @@ class MLCaptchaServiceTests extends GroovyTestCase {
 	
 	@Test
 	public void testDoubleValidationWithRandomCode() {
-		def captchaKey = mlCaptchaService.getNewChallenge()
+		def captchaKey = mlCaptchaService.generateNewCaptchaCode()
 		def word = captchaStorage.get(captchaKey)
 		
 		assertTrue mlCaptchaService.isValidAnswer(captchaKey, word)

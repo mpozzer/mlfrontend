@@ -16,10 +16,10 @@ class CaptchaImageController {
 	def mlCaptchaService
 	
 	def index = {
-		String captchaHash = params.id;
+		String captchaCode = params.id;
 		Integer w = params.width.toInteger()
 		Integer h = params.height.toInteger()
-		ImgWordModel imgModel = mlCaptchaService.generateImage(captchaHash, w, h)
+		ImgWordModel imgModel = mlCaptchaService.renderImage(captchaCode, w, h)
 
 		response.setHeader("Content-type", CONTENT_TYPE)
 		response.setIntHeader("Content-length", imgModel.bytes.length)

@@ -17,14 +17,16 @@ class MLCaptchaService {
 	private String DEFAULT_SALT = "MercadoLibreCaptcha" 
 	
 	/**
-	 * Generates a captcha image to challenge human beings on form submissions.
-	 * @param captchaHash the hash to use to generate the image
-	 * @param width the desired width
-	 * @param height the desired height
+	 * Dado un captchaCode, renderiza una imagen, con distorsion aleatoria, correspondiente a la palabra generada.
+	 * Esta imagen se muestra al usuario, para que reconozca los caracteres y luego validarlos con 
+	 * el metodo {{@link #isValidAnswer(String, String)}
+	 * @param captchaCode el codigo asociado a la palabra a renderizar.
+	 * @param width ancho de la imagen
+	 * @param height la altura de la imagen
 	 * @return
 	 */
-	public ImgWordModel generateImage(captchaHash, Integer width, Integer height) {
-		def text = captchaStorageService.get(captchaHash)
+	public ImgWordModel renderImage(captchaCode, Integer width, Integer height) {
+		def text = captchaStorageService.get(captchaCode)
 		
 		ImgWordModel model = new ImgWordModel(
 		  text,
@@ -39,11 +41,14 @@ class MLCaptchaService {
 
 	
 	/**
-	 * Get a new captcha challenge phrase for a URL
-	 * Word length is configurable via: CH.captcha.word_length
-	 * @return the captcha phrase is encrypted to be secure and encoded for a URL
+	 * Genera una nueva palabra con letras y/o numeros y devuelve un hash code aleatorio, unico, asociado
+	 * a esta frase.
+	 * Los caracteres ingresados por el usuario se validan contra este codigo.
+	 * 
+	 * La longitud de la palabra es configurable por el config file con la propiedad: CH.captcha.word_length
+	 * @return captcha code, es aleatorio y unico para la palabra generada.
 	 */
-	public String getNewChallenge() {
+	public String generateNewCaptchaCode() {
 		def word = CaptchaGenerator.generateWord(CH.config.captcha.word_length)
 		
 		def captchaKey = URLEncoder.encode(UUID.randomUUID().toString(),"UTF-8")
@@ -54,18 +59,21 @@ class MLCaptchaService {
 	}
 	
 	/**
-	 * Validates a given captchaChallenge hash against a user response
+	 * Valida los caracteres ingresados por el usuario, para una imagen dada, contra el captcha code correspondiente a la imagen.
+	 * Este captcha es invalidado luego de esta validacion. No podra ser usado nuevamente por otro request.
+	 * 
 	 */
-	public Boolean isValidAnswer(String captchaChallenge, String userResponse) {
+	public Boolean isValidAnswer(String captchaCode, String userResponse) {
+		captchaCode = URLDecoder.decode(captchaCode,"UTF-8")
 		
-		if (!userResponse || !captchaChallenge)
+		if (!userResponse || !captchaCode)
 			return false
 
 		def code = String.valueOf(Math.random())
 		
-		captchaStorageService.append(captchaChallenge,code)
+		captchaStorageService.append(captchaCode,code)
 		
-		def word = captchaStorageService.get(captchaChallenge)
+		def word = captchaStorageService.get(captchaCode)
 
 		return (word).equalsIgnoreCase(userResponse+code);
 	}
