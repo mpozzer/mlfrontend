@@ -16,7 +16,6 @@ class CookieService {
     
 	String get(String name) {
 		if ("track_info".equals(name)) {
-			// pduranti: esta cookie se tiene que levantar de manera especial
 		    return getTrackInfo()	
 		}
 		
@@ -34,7 +33,7 @@ class CookieService {
 
 	/**
 	 * Levanta la cookie de trackinfo con una expresion regular de los headers
-	 * Esta cookie se tiene que levantar con una expresion regular porque contiene ':' en el valor
+	 * con una expresion regular
 	 * (pduranti)
 	 * @return
 	 */
