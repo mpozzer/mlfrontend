@@ -33,14 +33,20 @@ class CookieService {
 
 	/**
 	 * Levanta la cookie de trackinfo con una expresion regular de los headers
-	 * con una expresion regular
 	 * (pduranti)
 	 * @return
 	 */
 	public getTrackInfo() {
 		Matcher m = RequestContextHolder.currentRequestAttributes().request.getHeader('Cookie') =~ /track_info=(.*?);/
-		def trackInfoId = (m.find())?m[0][1]:''
-		return trackInfoId
+		def cookieValue = (m.find())?m[0][1]:null
+		
+		if (cookieValue) {
+			log.info "Found cookie \"track_info\", value = \"${cookieValue}\""
+			return cookieValue
+		} else {
+			log.info "No cookie found with name: \"track_info\""
+			return null
+		}
 	}
 	
     /* Sets the cookie with name to value, with maxAge in seconds */
