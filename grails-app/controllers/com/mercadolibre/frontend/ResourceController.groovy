@@ -1,7 +1,6 @@
 package com.mercadolibre.frontend
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder
-import com.mercadolibre.frontend.commons.SiteBasedConfiguration as SBC
 
 /**
  * Base class for resource controllers. Reads a resource file and handles minification optimizing
@@ -93,10 +92,6 @@ abstract class ResourceController {
 			    return ""
 			}
 		}
-	}
-	
-	private getDefaultParams() {
-		return [show: true, siteId: params.siteId, baseStatic: SBC.getConfig(params.siteId).url['baseStatic']]
 	}
 	
 	private removeExtension(fileName) {
