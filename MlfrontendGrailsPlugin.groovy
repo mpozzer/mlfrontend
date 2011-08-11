@@ -1,12 +1,13 @@
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-
-
-import com.mercadolibre.frontend.ResourceController
 import grails.util.Environment
+
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.springframework.aop.scope.ScopedProxyFactoryBean
+
+import com.mercadolibre.frontend.MLHTMLContext
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "1.0.2"
+	def version = "1.0.3"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on
@@ -51,14 +52,14 @@ class MlfrontendGrailsPlugin {
 
 		for(; i < mappings.size() && mappings[i].'filter-name'!='charEncodingFilter'; i++);
 
-		mappings[i] + {
-			'filter-mapping'{
-				'filter-name'('MlFilter')
-				'url-pattern'('/*')
-				'dispatcher'('REQUEST')
-				'dispatcher'('FORWARD')
+			mappings[i] + {
+				'filter-mapping'{
+					'filter-name'('MlFilter')
+					'url-pattern'('/*')
+					'dispatcher'('REQUEST')
+					'dispatcher'('FORWARD')
+				}
 			}
-		}
 	}
 
 	def doWithSpring = {
@@ -73,7 +74,7 @@ class MlfrontendGrailsPlugin {
 			}
 			soTimeout = 1000
 		}
-		
+
 		if(Environment.current == Environment.PRODUCTION){
 			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageService) { bean ->
 				hostname = CH.config.captcha.memcached.hostname ?: "localhost"
@@ -84,9 +85,7 @@ class MlfrontendGrailsPlugin {
 			captchaStorage(com.mercadolibre.frontend.services.CaptchaStorageServiceStub)
 		}
 
-		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) {
-			captchaStorageService = ref("captchaStorage")
-		}
+		mlCaptchaService(com.mercadolibre.frontend.services.MLCaptchaService) { captchaStorageService = ref("captchaStorage") }
 
 		mlParamsAwareFilter(com.mercadolibre.filters.MLParamsAwareFilter)
 
@@ -95,6 +94,16 @@ class MlfrontendGrailsPlugin {
 		}
 
 		compressionService(com.mercadolibre.frontend.services.CompressionService)
+
+
+		MLHTMLContextNoProxy(MLHTMLContext) { bean ->
+			bean.scope = "request"
+		}
+
+		MLHTMLContext(ScopedProxyFactoryBean)  {
+			targetBeanName = 'MLHTMLContextNoProxy'
+			proxyTargetClass = true
+		}
 
 	}
 
@@ -105,7 +114,7 @@ class MlfrontendGrailsPlugin {
 		String.metaClass.encodeURIComponent = { anEncode ->
 			return URLEncoder.encode(delegate,(anEncode?:CH.config.grails.views.gsp.encoding).toString())
 		}
-		
+
 	}
 
 	def doWithApplicationContext = { applicationContext ->

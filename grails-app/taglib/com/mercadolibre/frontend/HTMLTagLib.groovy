@@ -11,7 +11,15 @@ class HTMLTagLib {
 	static namespace = 'ml'
 
 	def compressionService
-
+	
+	def MLHTMLContext
+	
+	static returnObjectForTags = ['compress']
+	
+	def compress = { attrs, body ->
+		return Boolean.valueOf(attrs.remove('compress')) && (params.compress == null || Boolean.valueOf(params.compress))
+	}
+	
 	/**
 	 * Takes the following attributes:
 	 * -compress: if true, HTML is minified using {@Code CompressionService}
@@ -22,14 +30,8 @@ class HTMLTagLib {
 
 		def attrClass = attrs.remove('class')
 
-		pageScope.mlhtml = [:]
-
-		pageScope.mlhtml.compress = Boolean.valueOf(attrs.remove('compress')) && (params.compress == null || Boolean.valueOf(params.compress))
-
-		pageScope.mlhtml.siteId = attrs.siteId?:params.siteId
+		MLHTMLContext.siteId = attrs.siteId?:params.siteId
 		
-		pageScope.mlhtml.scripts = [:]
-
 		def htmlAttrs = HTMLUtil.serializeAttributes(attrs)
 
 		attrClass = (attrClass)?' ' + attrClass:''
@@ -44,7 +46,7 @@ class HTMLTagLib {
 
 		def timeCompress = 0
 
-		if (pageScope.mlhtml.compress) {
+		if (ml.compress(attrs)) {
 			def bodyTemp = body().toString();
 			timeCompress = System.currentTimeMillis()
 			def compressBody = compressionService.compressHTML(bodyTemp)
@@ -89,7 +91,7 @@ class HTMLTagLib {
 
 		sb.append(attrs.ext)
 		sb.append("/")
-		sb.append(pageScope.mlhtml.siteId)
+		sb.append(MLHTMLContext.siteId)
 		sb.append("/")
 		sb.append(grailsApplication.metadata['app.version'])
 		sb.append("/")
@@ -97,7 +99,7 @@ class HTMLTagLib {
 		sb.append(".")
 		sb.append(attrs.ext)
 
-		if(!pageScope.mlhtml.compress){
+		if(!ml.compress(attrs)){
 			sb.append("?compress=false");
 		}
 

@@ -8,9 +8,11 @@ class ScriptTagLib {
 	static namespace = 'ml'
 
 	CompressionService compressionService
+	
+	def MLHTMLContext
 
 	def private compressJavascript(javascript){
-		if(pageScope.mlhtml.compress){
+		if(MLHTMLContext.compress){
 			return compressionService.compressJavaScript(javascript)
 		}
 		return javascript
@@ -88,28 +90,32 @@ class ScriptTagLib {
 				out << getScript(script)
 			}
 		}
+		
+		if(!MLHTMLContext.scripts){
+			MLHTMLContext.scripts = [:]
+		}
 
 		if(scriptDefered){
 			if(attrs.async){
-				if(!pageScope.mlhtml.scripts['async']){
-					pageScope.mlhtml.scripts['async'] = []
+				if(!MLHTMLContext.scripts['async']){
+					MLHTMLContext.scripts['async'] = []
 				}
-				pageScope.mlhtml.scripts['async'] << scriptDefered
+				MLHTMLContext.scripts['async'] << scriptDefered
 			}else if(attrs.onload){
-				if(!pageScope.mlhtml.scripts['onload']){
-					pageScope.mlhtml.scripts['onload'] = []
+				if(!MLHTMLContext.scripts['onload']){
+					MLHTMLContext.scripts['onload'] = []
 				}
-				pageScope.mlhtml.scripts['onload'] << scriptDefered
+				MLHTMLContext.scripts['onload'] << scriptDefered
 			}
 		}
 	}
 
 	def scriptDefered = { attrs ->
 
-		if(pageScope.mlhtml.scripts){
+		if(MLHTMLContext.scripts){
 			out << "<script type=\"text/javascript\">"
 
-			def scriptOnload = pageScope.mlhtml.scripts['onload']
+			def scriptOnload = MLHTMLContext.scripts['onload']
 
 			if(scriptOnload){
 
@@ -135,7 +141,7 @@ class ScriptTagLib {
 				out << getScriptOnload(sb.toString())
 			}
 
-			def scriptAsync = pageScope.mlhtml.scripts['async']
+			def scriptAsync = MLHTMLContext.scripts['async']
 
 			if(scriptAsync){
 
