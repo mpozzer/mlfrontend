@@ -85,7 +85,7 @@ class ScriptTagLib {
 				scriptDefered['script'] = script
 			}
 			else{
-				out << script
+				out << getScript(script)
 			}
 		}
 
@@ -138,8 +138,6 @@ class ScriptTagLib {
 
 		def scriptAsync = pageScope.mlhtml.scripts['async']
 		
-		println scriptAsync
-
 		if(scriptAsync){
 
 			StringBuilder sb = new StringBuilder()
