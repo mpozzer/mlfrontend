@@ -5,8 +5,8 @@ import com.yahoo.platform.yui.compressor.JavaScriptCompressor
 
 class JavaScriptController extends ResourceController {
 
-	def javasScriptCompressionService
-	
+	def compressionService
+
 	@Override
 	def getContentType() {
 		"text/javascript"
@@ -14,20 +14,41 @@ class JavaScriptController extends ResourceController {
 
 	@Override
 	def getResourceSplit() {
-		'\n'
+		';\n'
 	}
 
 	@Override
 	def getExtension() {
 		'js'
 	}
+	@Override
+	def getAdditionalContent(){
+		if(params.async){
+			return """
+				if(typeof _async != 'undefined'){
+					for (i=0;i<_async.length;i++){
+						_async[i]();
+					}
+				}
+				var _async = function(){
+				  return {
+					push: function(q) {
+					  q();
+					}
+				  };
+				}();
+			"""
+		}
+		else if(params.callback){
+			return "if(typeof ${params.callback} == 'function') { ${params.callback}();}"
+		}
+		else{
+			return ""
+		}
+	}
 
 	@Override
 	def minimize(script) {
-		if (noCompress()) {
-			return script
-		} else {
-			return javasScriptCompressionService.compress(script)
-		}
+		return compressionService.compressJavaScript(script)
 	}
 }

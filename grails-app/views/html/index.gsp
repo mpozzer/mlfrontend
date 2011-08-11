@@ -1,4 +1,4 @@
-<ml:html>
+<ml:html compress="true">
   <ml:head>
 	  <title>MercadoLibre Frontend Plugin</title>
 	  

@@ -6,7 +6,7 @@ class HostNameResolver {
 
 	def static getHostName(){
 		if(!hostName){
-			hostName =  System.getenv()['HOSTNAME']
+			hostName =  System.getenv()['HOSTNAME']?:InetAddress.getLocalHost().getHostAddress()
 		}
 		return hostName
 	}

@@ -2,23 +2,11 @@ class MLFeUrlMappings {
 
 	static mappings = {
 		
-		"/css/$site/$appVersion/$resources" {
-			controller = "cascadingStyleSheet"
-			constraints {
-				site(matches: /[A-Z]{3}/)
-			}
-		}
+		"/css/$site/$appVersion/$resources"(controller:"cascadingStyleSheet")
 		
-		"/js/$site/$appVersion/$resources" {
-			controller = "javaScript"
-			constraints {
-				site(matches: /[A-Z]{3}/)
-			}
-		}
+		"/js/$site/$appVersion/$resources"(controller:"javaScript")
 		
-		"/captcha.jpg" {
-			controller = "captchaImage"
-		}
+		"/captcha.jpg"(controller:"captchaImage")
 		
 	}
 }

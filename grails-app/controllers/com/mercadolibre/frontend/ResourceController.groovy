@@ -24,8 +24,6 @@ abstract class ResourceController {
 		params.siteId = request.getParameter("siteId")
 	}
 	
-	def groovyTemplateEngine
-	
 	def index = {
 
 		response.setHeader("Content-type", contentType)
@@ -39,13 +37,17 @@ abstract class ResourceController {
 		StringBuilder sb = new StringBuilder()
 
 		def fileNames = params.resources?.split('_').each{
-			def output = new StringWriter()
-			
 			sb.append(readFile(it))
 			sb.append(resourceSplit)
 		}
+		
+		sb.append(minimize(additionalContent))
 
 		render sb.toString()
+	}
+	
+	def getAdditionalContent(){
+		return ""
 	}
 
 	def minimize(script){
@@ -63,6 +65,10 @@ abstract class ResourceController {
 	def getExtension() {
 		"txt"
 	}
+	
+	def compress(){
+		return params.compress == null || Boolean.valueOf(params.compress)
+	}
 
 	/**
 	 * Reads the resource file given and handles minification.
@@ -78,10 +84,11 @@ abstract class ResourceController {
 		    def normal = ApplicationHolder.application.parentContext.servletContext.getRealPath(extension + "/" + fileName  + "." + extension)
 			f = new File(normal)
 			if (f.exists()) {
-				if (noCompress()) {
+				if (compress()) {
+					return minimize(processTemplate(f.text))
+				}else{
 					return processTemplate(f.text)
 				}
-				return minimize(processTemplate(f.text))
 			} else {
 			    return ""
 			}
@@ -99,13 +106,9 @@ abstract class ResourceController {
 	}
 	
 	/**
-	 * Process the string as a GSP template
+	 * Process the string
 	 */
 	private processTemplate(text) {
 		return text
-//      TODO: pduranti - deshabilitamos el procesamiento de templates en resources, para mejorarlo en la proxima release
-//		def output = new StringWriter()
-//		groovyTemplateEngine.createTemplate(text, 'sample').make(getDefaultParams()).writeTo(output)
-//		return output.toString()
 	}
 }

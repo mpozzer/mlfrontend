@@ -6,16 +6,14 @@ class UrlMappings {
 				// apply constraints here
 			}
 		}
-
+		
+		"/test/$test"(controller:"test",action:"test")
+		"/test/$test/assert"(controller:"test",action:"testAssert")
+		
 		"/"(view:"/index")
 		
 		"500"(view:'/error')
-		
-		"/test/captcha"(controller:"sample"){
-			action = [GET:"show", POST:"validateCaptcha"]
-		}
-		
-		"/test/tags"(view: "/test/htmltags")
+
 	}
 	
 }

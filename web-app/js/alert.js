@@ -1,1 +1,1 @@
-alert('cargo test-js');
+var x = 10;

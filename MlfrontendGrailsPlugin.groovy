@@ -6,7 +6,7 @@ import grails.util.Environment
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "0.9.2"
+	def version = "0.9.3"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on
@@ -15,7 +15,9 @@ class MlfrontendGrailsPlugin {
 	def pluginExcludes = [
 		"grails-app/views/error.gsp",
 		"grails-app/views/html/index.gsp",
-		"grails-app/conf/UrlMappings.groovy"
+		"grails-app/conf/UrlMappings.groovy",
+		"grails-app/controllers/com/mercadolibre/frontend/TestController.groovy",
+		"grails-app/controllers/com/mercadolibre/frontend/CaptchaTestController",
 	]
 
 	// TODO Fill in these fields
@@ -92,9 +94,7 @@ class MlfrontendGrailsPlugin {
 			bean.dependsOn = ["simpleRestClient"]
 		}
 
-		htmlCompressionService(com.mercadolibre.frontend.services.HtmlCompressionService)
-
-		groovyTemplateEngine(org.codehaus.groovy.grails.web.pages.GroovyPagesTemplateEngine)
+		compressionService(com.mercadolibre.frontend.services.CompressionService)
 
 	}
 
@@ -105,11 +105,7 @@ class MlfrontendGrailsPlugin {
 		String.metaClass.encodeURIComponent = { anEncode ->
 			return URLEncoder.encode(delegate,(anEncode?:CH.config.grails.views.gsp.encoding).toString())
 		}
-		ResourceController.metaClass.noCompress = {
-			->
-			return Boolean.valueOf(params.noCompress)
-		}
-		// TODO Implement registering dynamic methods to classes (optional)
+		
 	}
 
 	def doWithApplicationContext = { applicationContext ->
