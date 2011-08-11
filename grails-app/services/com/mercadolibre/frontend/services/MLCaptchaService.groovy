@@ -14,7 +14,6 @@ class MLCaptchaService {
 	private String CAPTCHA_EXTENSION = "JPEG"
 	private Integer DEFAULT_WIDTH = 140
 	private Integer DEFAULT_HEIGHT = 85
-	private String DEFAULT_SALT = "MercadoLibreCaptcha" 
 	
 	/**
 	 * Dado un captchaCode, renderiza una imagen, con distorsion aleatoria, correspondiente a la palabra generada.
