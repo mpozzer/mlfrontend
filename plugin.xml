@@ -1,4 +1,4 @@
-<plugin name='mlfrontend' version='1.0.0' grailsVersion='1.3.7 &gt; *'>
+<plugin name='mlfrontend' version='1.0.1' grailsVersion='1.3.7 &gt; *'>
   <author>Pablo Moretti / Pablo Duranti</author>
   <authorEmail>pablo.moretti@mercadolibre.com / pablo.duranti@mercadolibre.com </authorEmail>
   <title>MercadoLibre Frontend</title>

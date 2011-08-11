@@ -96,9 +96,9 @@ class ScriptTagLib {
 				}
 				pageScope.mlhtml.scripts['async'] << scriptDefered
 			}else if(attrs.onload){
-			if(!pageScope.mlhtml.scripts['onload']){
-				pageScope.mlhtml.scripts['onload'] = []
-			}
+				if(!pageScope.mlhtml.scripts['onload']){
+					pageScope.mlhtml.scripts['onload'] = []
+				}
 				pageScope.mlhtml.scripts['onload'] << scriptDefered
 			}
 		}
@@ -108,54 +108,52 @@ class ScriptTagLib {
 
 		if(pageScope.mlhtml.scripts){
 			out << "<script type=\"text/javascript\">"
-		}
 
-		def scriptOnload = pageScope.mlhtml.scripts['onload']
+			def scriptOnload = pageScope.mlhtml.scripts['onload']
 
-		if(scriptOnload){
+			if(scriptOnload){
 
-			StringBuilder sb = new StringBuilder()
+				StringBuilder sb = new StringBuilder()
 
-			scriptOnload.each{
+				scriptOnload.each{
 
-				if(it.resource && it.script){
+					if(it.resource && it.script){
 
-					def callback = 'callback' + Math.abs(it.resource.hashCode())
+						def callback = 'callback' + Math.abs(it.resource.hashCode())
 
-					out << "function ${callback}(){ ${it.script} };"
-					
-					sb.append(getResourceAsync(addParameter(it.resource,'callback',callback)))
+						out << "function ${callback}(){ ${it.script} };"
+
+						sb.append(getResourceAsync(addParameter(it.resource,'callback',callback)))
+					}
+					else if(it.resource){
+						sb.append(getResourceAsync(it.resource))
+					}else if(it.script){
+						sb.append(compressJavascript(it.script))
+					}
 				}
-				else if(it.resource){
-					sb.append(getResourceAsync(it.resource))
-				}else if(it.script){
-					sb.append(compressJavascript(it.script))
-				}
+
+				out << getScriptOnload(sb.toString())
 			}
 
-			out << getScriptOnload(sb.toString())
-		}
+			def scriptAsync = pageScope.mlhtml.scripts['async']
 
-		def scriptAsync = pageScope.mlhtml.scripts['async']
-		
-		if(scriptAsync){
+			if(scriptAsync){
 
-			StringBuilder sb = new StringBuilder()
+				StringBuilder sb = new StringBuilder()
 
-			scriptAsync.each{
+				scriptAsync.each{
 
-				if(it.resource){
-					sb.append(getResourceAsync(addParameter(it.resource,'async',true)))
+					if(it.resource){
+						sb.append(getResourceAsync(addParameter(it.resource,'async',true)))
+					}
+					if(it.script){
+						sb.append(getScriptAsync(it.script))
+					}
 				}
-				if(it.script){
-					sb.append(getScriptAsync(it.script))
-				}
+
+				out << sb.toString();
 			}
 
-			out << sb.toString();
-		}
-
-		if(pageScope.mlhtml.scripts){
 			out << "</script>"
 		}
 	}
