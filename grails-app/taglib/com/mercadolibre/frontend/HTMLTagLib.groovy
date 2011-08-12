@@ -17,7 +17,7 @@ class HTMLTagLib {
 	static returnObjectForTags = ['compress']
 	
 	def compress = { attrs, body ->
-		return Boolean.valueOf(attrs.remove('compress')) && (params.compress == null || Boolean.valueOf(params.compress))
+		return (params.compress == null || Boolean.valueOf(params.compress))
 	}
 	
 	/**

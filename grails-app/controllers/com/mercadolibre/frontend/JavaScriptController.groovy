@@ -27,13 +27,17 @@ class JavaScriptController extends ResourceController {
 			return """
 				if(typeof _async != 'undefined'){
 					for (i=0;i<_async.length;i++){
-						_async[i]();
+						var g = document.createElement('script'), s = document.getElementsByTagName('script')[0];
+						g.innerHTML = _async[i];
+						s.parentNode.insertBefore(g, s);
 					}
 				}
 				var _async = function(){
 				  return {
 					push: function(q) {
-					  q();
+						var g = document.createElement('script'), s = document.getElementsByTagName('script')[0];
+						g.innerHTML = q;
+						s.parentNode.insertBefore(g, s);
 					}
 				  };
 				}();

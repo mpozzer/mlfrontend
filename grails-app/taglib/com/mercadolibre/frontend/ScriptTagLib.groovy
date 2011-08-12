@@ -1,6 +1,7 @@
 package com.mercadolibre.frontend
 
-import com.mercadolibre.frontend.commons.SiteBasedConfiguration as SBC
+import org.apache.commons.lang.StringEscapeUtils
+
 import com.mercadolibre.frontend.services.CompressionService
 
 class ScriptTagLib {
@@ -12,7 +13,7 @@ class ScriptTagLib {
 	def MLHTMLContext
 
 	def private compressJavascript(javascript){
-		if(MLHTMLContext.compress){
+		if(ml.compress()){
 			return compressionService.compressJavaScript(javascript)
 		}
 		return javascript
@@ -34,10 +35,17 @@ class ScriptTagLib {
 		return  "var _async = [];(function(d, t){var g = d.createElement(t),s = d.getElementsByTagName(t)[0];g.async = g.src = '${src}';s.parentNode.insertBefore(g, s);}(document, 'script'));"
 	}
 
+//	def getScriptAsync(script){
+//		return  "_async.push(function(){ ${compressJavascript(script)} });"
+//	}
+
+	
 	def getScriptAsync(script){
-		return  "_async.push(function(){ ${compressJavascript(script)} });"
+		return  "_async.push(\"${StringEscapeUtils.escapeJavaScript(compressJavascript(script))}\");"
 	}
 
+	
+	
 	def getScriptOnload(script){
 		return  "window.onload = function(){ ${compressJavascript(script)} } ;"
 	}
