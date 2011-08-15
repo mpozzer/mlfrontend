@@ -28,7 +28,7 @@ class JavaScriptController extends ResourceController {
 				if(typeof _async != 'undefined'){
 					for (i=0;i<_async.length;i++){
 						var g = document.createElement('script'), s = document.getElementsByTagName('script')[0];
-						g.innerHTML = _async[i];
+						g.text = _async[i];
 						s.parentNode.insertBefore(g, s);
 					}
 				}
@@ -36,7 +36,7 @@ class JavaScriptController extends ResourceController {
 				  return {
 					push: function(q) {
 						var g = document.createElement('script'), s = document.getElementsByTagName('script')[0];
-						g.innerHTML = q;
+						g.text = q;
 						s.parentNode.insertBefore(g, s);
 					}
 				  };

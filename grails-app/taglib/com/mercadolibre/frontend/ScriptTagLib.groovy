@@ -19,10 +19,6 @@ class ScriptTagLib {
 		return javascript
 	}
 
-	def geLoaderScript(){
-		return "(function(d){window.scr={js:function(s,c){if(typeof s===\"string\") {s=[s];}var script=d.getElementsByTagName(\"script\")[0];var b={t:s.length,i:0};b.r=function() {return b.t===b.i;};var callback=function(){b.i++;if(c&&b.r()){c();}};var ready=(function(){if(script.readyState) {return function(n){n.onreadystatechange=function(){if(n.readyState==='loaded'||n.readyState==='complete'){n.onreadystatechange=null;callback();}};};}else{return function(n){n.onload=function(){callback();};};}}());var i=0;var e=d.createElement(\"script\");d.type=\"text/javascript\";for(i;i<b.t;i++){var n=e.cloneNode(true);ready(n);n.src=s[i];n.async=\"true\";script.parentNode.insertBefore(n,script);}}};}(document));"
-	}
-
 
 	def getScript(script){
 		return "<script type=\"text/javascript\">${compressJavascript(script)}</script>"
@@ -32,7 +28,7 @@ class ScriptTagLib {
 	}
 
 	def getResourceAsync(src){
-		return  "var _async = [];(function(d, t){var g = d.createElement(t),s = d.getElementsByTagName(t)[0];g.async = g.src = '${src}';s.parentNode.insertBefore(g, s);}(document, 'script'));"
+		return  "var _async = [];(function(d, t){var g = d.createElement(t),s = d.getElementsByTagName(t)[0];g.async = true;g.src = '${src}';s.parentNode.insertBefore(g, s);}(document, 'script'));"
 	}
 
 //	def getScriptAsync(script){
