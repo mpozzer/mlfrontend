@@ -7,7 +7,7 @@ import com.mercadolibre.frontend.MLHTMLContext
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "1.0.5"
+	def version = "1.0.6"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on
@@ -32,6 +32,7 @@ class MlfrontendGrailsPlugin {
 
 	def doWithWebDescriptor = { xml ->
 		def filters = xml.'filter'
+		
 		filters[filters.size() - 1] + {
 			'filter'{
 				'filter-name'('MlFilter')
@@ -45,21 +46,18 @@ class MlfrontendGrailsPlugin {
 					'param-value'('true')
 				}
 			}
-		}
-
-		def mappings = xml.'filter-mapping'
-		int i = 0
-
-		for(; i < mappings.size() && mappings[i].'filter-name'!='charEncodingFilter'; i++);
-
-			mappings[i] + {
-				'filter-mapping'{
-					'filter-name'('MlFilter')
-					'url-pattern'('/*')
-					'dispatcher'('REQUEST')
-					'dispatcher'('FORWARD')
-				}
+			'filter-mapping'{
+				'filter-name'('charEncodingFilter')
+				'url-pattern'('/*')
 			}
+			'filter-mapping'{
+				'filter-name'('MlFilter')
+				'url-pattern'('/*')
+				'dispatcher'('REQUEST')
+				'dispatcher'('FORWARD')
+			}
+		}
+		
 	}
 
 	def doWithSpring = {
