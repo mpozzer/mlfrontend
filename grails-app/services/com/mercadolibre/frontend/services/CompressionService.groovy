@@ -64,6 +64,6 @@ class CompressionService {
 //		compressor.setYuiJsPreserveAllSemiColons(true);//--preserve-semi param for Yahoo YUI Compressor
 //
 //		compressor.setGenerateStatistics(false)           // generate statistics
-
+		return compressor
 	}
 }
