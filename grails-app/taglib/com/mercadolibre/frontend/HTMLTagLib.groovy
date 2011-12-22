@@ -99,7 +99,7 @@ class HTMLTagLib {
 		sb.append(".")
 		sb.append(attrs.ext)
 
-		if(!ml.compress(attrs)){
+		if(!ml.compress(attrs) || attrs.compress == 'false' ){
 			sb.append("?compress=false");
 		}
 
