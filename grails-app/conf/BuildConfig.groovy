@@ -29,11 +29,11 @@ grails.project.dependency.resolution = {
 		mavenRepo "http://git.ml.com:8081/nexus/content/groups/Arquitectura"
 		mavenRepo "http://git.ml.com:8081/nexus/content/groups/public"
 		mavenRepo "http://git.ml.com:8081/nexus/content/groups/public_"
-		
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
     	compile ("com.mercadolibre.opensource.frameworks:restclient:0.5.11") { excludes "groovy" }
+		compile 'com.yahoo.platform.yui:yuicompressor:2.3.6'
 		compile 'javax.media:jai-core:1.1.3'
 		compile 'com.sun.media:jai-codec:1.1.3'
 		compile('com.google.guava:guava:r09')
