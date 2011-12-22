@@ -7,7 +7,7 @@ import com.mercadolibre.frontend.MLHTMLContext
 
 class MlfrontendGrailsPlugin {
 	// the plugin version
-	def version = "1.0.7"
+	def version = "1.0.8"
 	// the version or versions of Grails the plugin is designed for
 	def grailsVersion = "1.3.7 > *"
 	// the other plugins this plugin depends on
