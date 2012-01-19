@@ -18,7 +18,8 @@ import org.codehaus.groovy.grails.commons.ApplicationHolder
  * @author pduranti
  */
 abstract class ResourceController {
-
+	protected final static Map<String, String> loadedResources = new Hashtable<String, String>()
+	
 	def beforeInterceptor = {
 		params.siteId = request.getParameter("siteId")
 	}
@@ -32,17 +33,36 @@ abstract class ResourceController {
 		} else {
 		  response.setHeader("Cache-Control", "max-age=2592000,public")
 		}
-
+		
+		def preloadedResource = loadedResources.get(resourceId) 
+		
+		if(preloadedResource){
+			render preloadedResource
+			return
+		}
+		
+		def resource = loadResource()
+		
+		loadedResources.put resourceId, resource
+		
+		render resource
+	}
+	
+	def loadResource(){
 		StringBuilder sb = new StringBuilder()
-
+		
 		def fileNames = params.resources?.split('_').each{
 			sb.append(readFile(it))
 			sb.append(resourceSplit)
 		}
 		
 		sb.append(minimize(additionalContent))
-
-		render sb.toString()
+				
+		sb.toString()
+	}
+	
+	def getResourceId(){
+		request.forwardURI
 	}
 	
 	def getAdditionalContent(){
