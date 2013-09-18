@@ -17,8 +17,16 @@ class CaptchaImageController {
 	
 	def index = {
 		String captchaCode = params.id;
-		Integer w = params.width.toInteger()
-		Integer h = params.height.toInteger()
+		Integer w = null;
+		Integer h = null;
+		try{
+			w = params.width.toInteger()
+			h = params.height.toInteger()
+			w = w <= 350 ? w : 350;
+			h = h <= 150 ? h : 150;
+		}catch(Exception e){
+			log.error("Error parsing captcha parameters width: ${params.width} and height: ${params.height}",e)
+		}	
 		ImgWordModel imgModel = mlCaptchaService.renderImage(captchaCode, w, h)
 
 		response.setHeader("Content-type", CONTENT_TYPE)

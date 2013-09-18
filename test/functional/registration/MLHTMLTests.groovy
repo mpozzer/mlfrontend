@@ -1,4 +1,4 @@
-package registration
+package registration;
 
 import grails.test.GrailsUnitTestCase
 
@@ -9,12 +9,12 @@ import org.junit.Test
 class Registration_Buy_MLA_Tests extends GrailsUnitTestCase {
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		super.setUp()
 	}
 	
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown()  {
 		super.tearDown();
 	}
 	

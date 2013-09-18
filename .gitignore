@@ -2,6 +2,7 @@
 .project
 .settings/
 target/
+target-eclipse/
 web-app/WEB-INF/classes/
 newrelic.log
 grails-seo-*.zip

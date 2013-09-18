@@ -15,6 +15,6 @@ class CaptchaTestController {
    }
    
    def show = {
-	   render(view: "/test/captcha")
+	   render(view: "/html/index")
    }
 }
