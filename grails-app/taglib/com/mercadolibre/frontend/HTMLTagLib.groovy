@@ -5,6 +5,7 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder
 import com.mercadolibre.frontend.commons.SiteBasedConfiguration as SBC
 import com.mercadolibre.frontend.util.HTMLUtil;
 import com.mercadolibre.frontend.util.HostNameResolver;
+import org.apache.commons.lang.StringEscapeUtils
 
 class HTMLTagLib {
 
@@ -36,13 +37,13 @@ class HTMLTagLib {
 
 		attrClass = (attrClass)?' ' + attrClass:''
 
-		out << "<!DOCTYPE html>\n"
-		out << "<!--[if IE]><![endif]--> <!--[if lt IE 7 ]> <html lang=\"en\" class=\"no-js ie6${attrClass}\"${htmlAttrs}> <![endif]-->"
-		out << "<!--[if IE 7 ]> <html lang=\"en\" class=\"no-js ie7${attrClass}\"${htmlAttrs}> <![endif]-->"
-		out << "<!--[if IE 8 ]> <html lang=\"en\" class=\"no-js ie8${attrClass}\"${htmlAttrs}> <![endif]-->"
-		out << "<!--[if IE 9 ]> <html lang=\"en\" class=\"no-js ie9${attrClass}\"${htmlAttrs}> <![endif]-->"
-		out << "<!--[if (gt IE 9)|!(IE)]> <!--> <html lang=\"en\" class=\"no-js${attrClass}\"${htmlAttrs}> <!--<![endif]-->"
-		out << '\n'
+		out << "<!doctype html>"
+        out << "<!--[if lt IE 7]> <html class=\"no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7 ie6${attrClass}\"${htmlAttrs} lang=\"en\"> <![endif]-->"
+        out << "<!--[if IE 7]>    <html class=\"no-js lt-ie10 lt-ie9 lt-ie8 ie7${attrClass}\"${htmlAttrs} lang=\"en\"> <![endif]-->"
+        out << "<!--[if IE 8]>    <html class=\"no-js lt-ie10 lt-ie9 ie8${attrClass}\"${htmlAttrs} lang=\"en\"> <![endif]-->"
+        out << "<!--[if IE 9]>    <html class=\"no-js lt-ie10 ie9${attrClass}\"${htmlAttrs} lang=\"en\"> <![endif]-->"
+        out << "<!--[if gt IE 9]><!--> <html class=\"no-js${attrClass}\"${htmlAttrs} lang=\"en\"> <!--<![endif]-->"
+        out << "\n"
 
 		def timeCompress = 0
 
@@ -91,6 +92,9 @@ class HTMLTagLib {
 
 		sb.append(attrs.ext)
 		sb.append("/")
+		if(!MLHTMLContext.siteId || !MLHTMLContext.siteId.matches("M\\w{2}")){
+			MLHTMLContext.siteId = "MLA"
+		}
 		sb.append(MLHTMLContext.siteId)
 		sb.append("/")
 		sb.append(grailsApplication.metadata['app.version'])

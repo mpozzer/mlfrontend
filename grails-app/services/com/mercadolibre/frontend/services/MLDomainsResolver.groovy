@@ -64,15 +64,13 @@ class MLDomainsResolver implements InitializingBean, ApplicationContextAware {
 		simpleRestClient = (SimpleRestClient) ac.getBean("simpleRestClient");
 	}
 
-	static siteIdRegEx = /jms\/(\w\w\w)\//
+	static def siteIdRegEx = "(?:mercadopago.com|jms)/(\\w\\w\\w)/?"
 
 	public String getRequestSite(request) {
 
 		String siteId = null
-
-		String forwardURI = request.forwardURI
-
-		def siteIdMatcher = forwardURI =~ siteIdRegEx
+		
+		def siteIdMatcher = (request.serverName + request.forwardURI) =~ siteIdRegEx
 
 		if(siteIdMatcher){
 			siteId = siteIdMatcher[0][1].toUpperCase()
